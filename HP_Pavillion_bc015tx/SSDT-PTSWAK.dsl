@@ -25,6 +25,8 @@ DefinitionBlock("", "SSDT", 2, "OCLT", "PTSWAK", 0)
     External(EXT4, MethodObj)
     External(DGPU._ON, MethodObj)
     External(DGPU._OFF, MethodObj)
+    External(RMDT.P2, MethodObj)
+
 
     Scope (_SB)
     {
@@ -55,6 +57,7 @@ DefinitionBlock("", "SSDT", 2, "OCLT", "PTSWAK", 0)
         If (_OSI ("Darwin"))
         {
             \_SB.PCI9.TPTS = Arg0
+            \RMDT.P2 ("RMDT: _PTS-Arg0=", \_SB.PCI9.TPTS)
             
             if(\_SB.PCI9.FNOK ==1)
             {
@@ -85,7 +88,8 @@ DefinitionBlock("", "SSDT", 2, "OCLT", "PTSWAK", 0)
         If (_OSI ("Darwin"))
         {
             \_SB.PCI9.TWAK = Arg0
-            
+            \RMDT.P2 ("RMDT: _WAK-Arg0=", \_SB.PCI9.TWAK)
+
             if(\_SB.PCI9.FNOK ==1)
             {
                 \_SB.PCI9.FNOK =0

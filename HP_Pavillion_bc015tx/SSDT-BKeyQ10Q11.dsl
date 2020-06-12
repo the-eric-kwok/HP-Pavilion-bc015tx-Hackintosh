@@ -12,25 +12,31 @@
 // [BKey]_Q11 to XQ11
 // Find:     5F513131 00
 // Replace:  58513131 00
+//
+// [BKey]_Q0D to XQ0D
+// Find:     5F513044 00
+// Replace:  58513044 00
+
 DefinitionBlock("", "SSDT", 2, "ERIC", "BrightFN", 0)
 {
     External(_SB.PCI0.LPCB.PS2K, DeviceObj)
     External(_SB.PCI0.LPCB.EC0, DeviceObj)
     External(_SB.PCI0.LPCB.EC0.XQ10, MethodObj)
     External(_SB.PCI0.LPCB.EC0.XQ11, MethodObj)
-    
+    External(_SB.PCI0.LPCB.EC0.XQ0D, MethodObj)
+
     Scope (_SB.PCI0.LPCB.EC0)
     {
         Method (_Q10, 0, NotSerialized)//down
         {
             If (_OSI ("Darwin"))
             {
-                Notify(\_SB.PCI0.LPCB.PS2K, 0x0405)
+                Notify(\_SB.PCI0.LPCB.PS2K, 0x0405)    // e0 05 -> F14
                 Notify(\_SB.PCI0.LPCB.PS2K, 0x20)
             }
             Else
             {
-                \_SB.PCI0.LPCB.EC0.XQ10()
+                XQ10()
             }
         }
     
@@ -38,12 +44,12 @@ DefinitionBlock("", "SSDT", 2, "ERIC", "BrightFN", 0)
         {
             If (_OSI ("Darwin"))
             {
-                Notify(\_SB.PCI0.LPCB.PS2K, 0x0406)
+                Notify(\_SB.PCI0.LPCB.PS2K, 0x0406)    // e0 06 -> F15
                 Notify(\_SB.PCI0.LPCB.PS2K, 0x10)
             }
             Else
             {
-                \_SB.PCI0.LPCB.EC0.XQ11()
+                XQ11()
             }
         }
     }
