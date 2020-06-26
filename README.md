@@ -33,6 +33,15 @@
 11. 支持读卡器（通过Sinetek-rtsx.kext）
 12. 交换了左侧的 Windows（现为⌘）和 Alt（现为⌥）键，右侧 Alt 依旧作为 ⌘ 键，方便使用删除文件快捷键（SSDT-SwapCmdOpt.dsl）
 
+## 关于 1820A
+
+如果你没有更换自己的网卡的话**不需要**以下kext：
+
+- BrcmBluetoothInjector.kext
+- BrcmFirmwareData.kext
+- BrcmPatchRAM3.kext
+- AirportBrcmFixup.kext
+
 ## ⚠️警告⚠️
 
 十分不建议直接下载kexts文件夹中的kext使用，你应该按照对应的kext名字进行搜索，并且使用最新版本的kext。
