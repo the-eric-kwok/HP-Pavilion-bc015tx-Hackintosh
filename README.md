@@ -9,7 +9,7 @@
 | 机械硬盘  | HGST HTS721010A9E630 1TB                                  |
 | 集成显卡  | Intel HD Graphics 530                                     |
 | 独立显卡  | 无法驱动                                                  |
-| 声卡      | Realtek ALC295                                            |
+| 声卡      | Realtek ALC295 (Layout ID = 28或77)                       |
 | WIFI / BT | DELL DW1820A (0A5C:6412)                                  |
 | 有线网卡  | RTL8111/8168/8411 PCI Express Gigabit Ethernet Controller |
 
