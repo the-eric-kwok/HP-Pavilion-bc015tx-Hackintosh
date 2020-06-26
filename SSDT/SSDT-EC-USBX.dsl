@@ -30,11 +30,14 @@ DefinitionBlock ("", "SSDT", 2, "ACDT", "SsdtEC", 0x00001000)
      * could trigger randomly.
      */
 
-    /**
+    /*
     External (_SB_.PCI0.LPCB.EC0, DeviceObj)
 
     Scope (\_SB.PCI0.LPCB.EC0)
     {
+        //
+        //Rename 5214095F 53544100 A40A0F5B
+        //To 52140958 53544100 A40A0F5B
         Method (_STA, 0, NotSerialized)  // _STA: Status
         {
             If (_OSI ("Darwin"))
@@ -47,7 +50,8 @@ DefinitionBlock ("", "SSDT", 2, "ACDT", "SsdtEC", 0x00001000)
             }
         }
     }
-    **/
+    */
+    
 
     Scope (\_SB)
     {
