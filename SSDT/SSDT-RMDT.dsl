@@ -1,3 +1,4 @@
+// Rehabman Debug Tool
 // for use with ACPIDebug
 // This file was created by applying "Add DSDT Debug Methods" to an empty SSDT
 //

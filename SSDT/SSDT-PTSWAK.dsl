@@ -2,15 +2,7 @@
 // [PTSWAK]_PTS to ZPTS(1,N)
 // Find:     5F50545301
 // Replace:  5A50545301
-// or 
-// [PTSWAK]_PTS to ZPTS(1,S)
-// Find:     5F50545309
-// Replace:  5A50545309
 //
-// [PTSWAK]_WAK to ZWAK(1,N)
-// Find:     5F57414B01
-// Replace:  5A57414B01
-// or
 // [PTSWAK]_WAK to ZWAK(1,S)
 // Find:     5F57414B09
 // Replace:  5A57414B09
@@ -52,7 +44,7 @@ DefinitionBlock("", "SSDT", 2, "OCLT", "PTSWAK", 0)
         }
     }   
     
-    Method (_PTS, 1, NotSerialized) //Method (_PTS, 1, Serialized)
+    Method (_PTS, 1, NotSerialized)
     {
         If (_OSI ("Darwin"))
         {
@@ -82,7 +74,6 @@ DefinitionBlock("", "SSDT", 2, "OCLT", "PTSWAK", 0)
         ZPTS(Arg0)
     }
     
-    //Method (_WAK, 1, NotSerialized) 
     Method (_WAK, 1, Serialized)
     {   
         If (_OSI ("Darwin"))

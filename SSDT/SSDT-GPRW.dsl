@@ -1,4 +1,4 @@
-//
+// 6D/0D patch
 // In config ACPI, GPRW to XPRW
 // Find:     47505257 02
 // Replace:  58505257 02

@@ -25,14 +25,6 @@
 // Find:    534D5244 04
 // Replace: 584D5244 04
 //
-// [BATT]CLRI to XLRI
-// Find:    434C5249 08
-// Replace: 584C5249 08
-//
-// [BATT]SMD0 to SMDX
-// Find:    534D4430 4010
-// Replace: 534D4458 4010
-//
 // [BATT]ACEL._STA to XSTA
 // Find:    055F5354 4100A040
 // Replace: 05585354 4100A040
@@ -263,7 +255,7 @@ DefinitionBlock ("", "SSDT", 2, "ERIC", "BATT", 0) {
                 Return (Local0)
             }
             Else {    // Else call original method
-                Return (\_SB.PCI0.LPCB.EC0.XMWR ())
+                Return (\_SB.PCI0.LPCB.EC0.XMWR(Arg0, Arg1, Arg2, Arg3))
             }
         }
         Method (SMRD, 4, NotSerialized) {
@@ -377,7 +369,7 @@ DefinitionBlock ("", "SSDT", 2, "ERIC", "BATT", 0) {
                 Return (Local0)
             }
             Else {
-                Return(\_SB.PCI0.LPCB.EC0.XMRD())
+                Return(\_SB.PCI0.LPCB.EC0.XMRD(Arg0, Arg1, Arg2, Arg3))
             }
         }
     }
@@ -388,11 +380,11 @@ DefinitionBlock ("", "SSDT", 2, "ERIC", "BATT", 0) {
                 Return (0)
             }
             Else {
-                XSTA()
+                Return(\_SB.PCI0.ACEL.XSTA())        // Cause Windows keyboard stop after sleep
             }
         }
     }
-
+    
     
     Scope(\_SB.BAT0) {    
         Method (UPBI, 0, NotSerialized) {

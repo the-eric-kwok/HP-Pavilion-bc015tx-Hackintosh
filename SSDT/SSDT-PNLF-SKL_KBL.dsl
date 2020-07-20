@@ -1,4 +1,6 @@
-//
+// Rename PNLF to XNLF in order to avoid conflict
+// Replace: 504E4C46
+// To:      584E4C46
 DefinitionBlock("", "SSDT", 2, "OCLT", "PNLF", 0)
 {
     Scope(_SB)

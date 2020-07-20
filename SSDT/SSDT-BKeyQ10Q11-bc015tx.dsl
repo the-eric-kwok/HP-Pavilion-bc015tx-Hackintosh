@@ -12,10 +12,7 @@
 // [BKey]_Q11 to XQ11
 // Find:     5F513131 00
 // Replace:  58513131 00
-//
-// [BKey]_Q0D to XQ0D
-// Find:     5F513044 00
-// Replace:  58513044 00
+
 
 DefinitionBlock("", "SSDT", 2, "ERIC", "BrightFN", 0)
 {
@@ -24,10 +21,13 @@ DefinitionBlock("", "SSDT", 2, "ERIC", "BrightFN", 0)
     External(_SB.PCI0.LPCB.EC0.XQ10, MethodObj)
     External(_SB.PCI0.LPCB.EC0.XQ11, MethodObj)
     External(_SB.PCI0.LPCB.EC0.XQ0D, MethodObj)
+    External(_SB.PCI9.TPTS, IntObj)
+    External(_SB.PCI9.TWAK, IntObj)
+    External(RMDT.P2, MethodObj)
 
     Scope (_SB.PCI0.LPCB.EC0)
     {
-        Method (_Q10, 0, NotSerialized)//down
+        Method (_Q10, 0, NotSerialized) // Brightness down
         {
             If (_OSI ("Darwin"))
             {
@@ -40,8 +40,12 @@ DefinitionBlock("", "SSDT", 2, "ERIC", "BrightFN", 0)
             }
         }
     
-        Method (_Q11, 0, NotSerialized)//up
+        Method (_Q11, 0, NotSerialized) // Brightness up
         {
+            // Uncomment these 2 lines for debugging PTSWAK patch
+            \RMDT.P2 ("RMDT:_PTS-Arg0=", \_SB.PCI9.TPTS)
+            \RMDT.P2 ("RMDT:_WAK-Arg0=", \_SB.PCI9.TWAK)
+            
             If (_OSI ("Darwin"))
             {
                 Notify(\_SB.PCI0.LPCB.PS2K, 0x0406)    // e0 06 -> F15
