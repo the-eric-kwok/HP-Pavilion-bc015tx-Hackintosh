@@ -17,12 +17,16 @@ AirportBrcmFixup.kext 是 WiFi 驱动，其余三个是蓝牙驱动。
 
 ## 随航
 
-我在远景写过一篇帖子：[成功在DW1820A上启动无线随航](http://bbs.pcbeta.com/viewthread-1860842-1-1.html)
-
-现摘录如下：
-
 ### 适用于：
-不需屏蔽引脚也能正常使用的情况下。屏蔽引脚的情况没测试过，不确定能不能用
+下列三种型号的1820A
+
+- Pci14e4,43ba
+- Pci14e4,43a3
+- Pci14e4,43a0
+
+你可以在「系统信息」中查看网卡型号，如图所示即 Pci14e4,43a3
+
+![](img/1.png)
 
 ### 参考资料：
 
@@ -85,3 +89,9 @@ AirPortBrcmNIC：
 好啦，这下你可以试试和iPad连一下随航了！
 
 （按黑果小兵的教程来看，这个方法似乎也会启用对Apple Watch解锁的支持，我没有Apple Watch，不做测试啦）
+
+### 最后
+
+macOS 11 Big Sur 中移除了 AirPortBrcm4360 这个驱动，所以将来应该会默认驱动 AirPortBrcmNIC 啦，到时候应该就不会有无线随航用不了的问题了，毕竟一旦用不了，就是根本驱动不起来Wi-Fi。
+
+ 
