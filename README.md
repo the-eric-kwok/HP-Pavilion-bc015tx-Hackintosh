@@ -13,10 +13,14 @@
 | WIFI / BT | DELL DW1820A (Pci14e4,43a3)                               |
 | 有线网卡  | RTL8111/8168/8411 PCI Express Gigabit Ethernet Controller |
 
+
+
 ## 无法驱动
 
 1. 独立显卡
 2. HDMI输出（HDMI走的独显，故无解）
+
+
 
 ## 正常功能
 
@@ -35,6 +39,8 @@
 13. 支持读卡器（通过Sinetek-rtsx.kext）
 14. 交换了左侧的 Windows（现为⌘）和 Alt（现为⌥）键，右侧 Alt 依旧作为 ⌘ 键，方便使用删除文件快捷键（SSDT-SwapCmdOpt.dsl）
 
+
+
 ## 关于 1820A
 
 如果你没有更换自己的网卡的话**不需要**以下kext：
@@ -43,6 +49,20 @@
 - BrcmFirmwareData.kext
 - BrcmPatchRAM3.kext
 - AirportBrcmFixup.kext
+
+
+
+## BIOS设置
+
+开机时按下 F10 进入 BIOS 设置，禁用 Intel SGX 和安全启动
+
+![IMG_1673](/Volumes/Data/eric/Documents/SSDT相关/HP-Pavillion-bc015tx-Hackintosh/img/IMG_1673.jpeg)
+
+![IMG_1674](/Volumes/Data/eric/Documents/SSDT相关/HP-Pavillion-bc015tx-Hackintosh/img/IMG_1674.jpeg)
+
+![IMG_1675](/Volumes/Data/eric/Documents/SSDT相关/HP-Pavillion-bc015tx-Hackintosh/img/IMG_1675.jpeg)
+
+
 
 ## ⚠️警告⚠️
 
@@ -76,3 +96,12 @@ iasl SSDT-xxx.dsl
 我的SSDT很多都是照抄OC-Little库中的，所以OC-Little**一定要自己看了理解实践**，这样才能打造一个属于你的完美黑苹果！
 
 **BTW，SSDT-BATT和SSDT-Battery功能重复，都是电池热补丁，不过一个是Pavillion 15 通用型补丁，一个是bc015tx专用的补丁，可以根据喜好选择编译使用**
+
+
+
+## 链接
+
+[OpenCorePkg](https://github.com/acidanthera/OpenCorePkg/releases)
+
+[Clover](https://github.com/CloverHackyColor/CloverBootloader/releases)
+
