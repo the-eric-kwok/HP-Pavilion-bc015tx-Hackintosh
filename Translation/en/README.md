@@ -56,11 +56,11 @@ Without replacement of 1820A you **DONT NEED** these kexts:
 
 Press F10 at boot time to enter BIOS, disable Intel SGX and Secure Boot.
 
-![IMG_1673](/Volumes/Data/eric/Documents/SSDT相关/HP-Pavillion-bc015tx-Hackintosh/img/IMG_1673.jpeg)
+![IMG_1673](../../img/IMG_1673.jpeg)
 
-![IMG_1674](/Volumes/Data/eric/Documents/SSDT相关/HP-Pavillion-bc015tx-Hackintosh/img/IMG_1674.jpeg)
+![IMG_1674](../../img/IMG_1674.jpeg)
 
-![IMG_1675](/Volumes/Data/eric/Documents/SSDT相关/HP-Pavillion-bc015tx-Hackintosh/img/IMG_1675.jpeg)
+![IMG_1675](../../img/IMG_1675.jpeg)
 
 
 
