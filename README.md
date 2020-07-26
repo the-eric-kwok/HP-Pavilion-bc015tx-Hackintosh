@@ -118,11 +118,11 @@ iasl SSDT-xxx.dsl
 
 ## 目录
 
-[关于 1820A 网卡](Docs/About 1820A.md)
+[关于 1820A 网卡](Docs/About_1820A.md)
 
-[关于原装 Intel AC7265 网卡](Docs/About Intel AC7265.md)
+[关于原装 Intel AC7265 网卡](Docs/About_Intel_AC7265.md)
 
-[使用 Hackintool 进行 USB 定制](Docs/使用 Hackintool 进行 USB 定制.md)
+[使用 Hackintool 进行 USB 定制](Docs/使用Hackintool进行USB定制.md)
 
 [从 VoodooPS2 迁移到 VoodooRMI](Docs/从VoodooPS2迁移到VoodooRMI.md)
 

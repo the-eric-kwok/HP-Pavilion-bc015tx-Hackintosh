@@ -113,11 +113,11 @@ Check [OC-Little](https://github.com/daliansky/OC-little/) for more patching gui
 
 ## Catalog
 
-[About 1820A](About 1820A.md)
+[About 1820A](About_1820A.md)
 
-[About Intel AC7265](About Intel AC7265.md)
+[About Intel AC7265](About_Intel_AC7265.md)
 
-[Patching USB with Hackintool](Patching USB with Hackintool.md)
+[Patching USB with Hackintool](Patching_USB_with_Hackintool.md)
 
-[Fixing Suddenly Poweroff On BIOS Stage](Fixing Suddenly Poweroff On BIOS Stage.md)
+[Fixing Suddenly Poweroff On BIOS Stage](Fixing_Suddenly_Poweroff_On_BIOS_Stage.md)
 
