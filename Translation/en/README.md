@@ -97,7 +97,7 @@ Check [OC-Little](https://github.com/daliansky/OC-little/) for more patching gui
 
 
 
-**BTW, SSDT-BATT and SSDT-Battery has the same function, they both patch for the battery percentage. Use ONE of them. **
+**BTW, SSDT-BATT and SSDT-Battery has the same function, they both patch for the battery percentage. Use ONE of them only.**
 
 **Set `csr-active-config` under OC-config.plist - NVRAM to `00000000` if you are fresh installing.**
 
