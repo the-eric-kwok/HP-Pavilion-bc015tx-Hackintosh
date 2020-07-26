@@ -63,11 +63,11 @@ Language:
 
 开机时按下 F10 进入 BIOS 设置，禁用 Intel SGX 和安全启动
 
-![IMG_1673](/Volumes/Data/eric/Documents/SSDT相关/HP-Pavillion-bc015tx-Hackintosh/img/IMG_1673.jpeg)
+![IMG_1673](img/IMG_1673.jpeg)
 
-![IMG_1674](/Volumes/Data/eric/Documents/SSDT相关/HP-Pavillion-bc015tx-Hackintosh/img/IMG_1674.jpeg)
+![IMG_1674](img/IMG_1674.jpeg)
 
-![IMG_1675](/Volumes/Data/eric/Documents/SSDT相关/HP-Pavillion-bc015tx-Hackintosh/img/IMG_1675.jpeg)
+![IMG_1675](/img/IMG_1675.jpeg)
 
 
 
