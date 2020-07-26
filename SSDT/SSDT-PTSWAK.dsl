@@ -18,6 +18,8 @@ DefinitionBlock("", "SSDT", 2, "OCLT", "PTSWAK", 0)
     External(DGPU._ON, MethodObj)
     External(DGPU._OFF, MethodObj)
     External(RMDT.P2, MethodObj)
+    External (_SB_.PCI0.XHC_.PMEE, FieldUnitObj)
+
 
 
     Scope (_SB)
@@ -68,6 +70,10 @@ DefinitionBlock("", "SSDT", 2, "OCLT", "PTSWAK", 0)
             If (CondRefOf(EXT2))
             {
                 EXT2(Arg0)
+            }
+            If ((0x05 == Arg0))    // Fix shutdown
+            {
+                \_SB.PCI0.XHC.PMEE = Zero
             }
         }
 

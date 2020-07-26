@@ -29,8 +29,8 @@ DefinitionBlock ("", "SSDT", 2, "ACDT", "SsdtEC", 0x00001000)
      * This can make your system unbootable at any time or hide bugs that
      * could trigger randomly.
      */
-
-    /*
+/*
+    
     External (_SB_.PCI0.LPCB.EC0, DeviceObj)
 
     Scope (\_SB.PCI0.LPCB.EC0)
@@ -39,7 +39,7 @@ DefinitionBlock ("", "SSDT", 2, "ACDT", "SsdtEC", 0x00001000)
         {
             If (_OSI ("Darwin"))
             {
-                Return (0)
+                Return (0)    // Block AppleACPIEC
             }
             Else
             {
@@ -47,53 +47,23 @@ DefinitionBlock ("", "SSDT", 2, "ACDT", "SsdtEC", 0x00001000)
             }
         }
     }
-    */
     
+    */
 
-    Scope (\_SB)
+    Scope (\_SB.PCI0.LPCB)
     {
-        Device (USBX)
+        Device (EC)
         {
-            Name (_ADR, Zero)  // _ADR: Address
-            Method (_DSM, 4, NotSerialized)  // _DSM: Device-Specific Method
+            Name (_HID, "ACID0001")  // _HID: Hardware ID
+            Method (_STA, 0, NotSerialized)  // _STA: Status
             {
-                If ((Arg2 == Zero))
+                If (_OSI ("Darwin"))
                 {
-                    Return (Buffer (One)
-                    {
-                         0x03                                             // .
-                    })
+                    Return (0x0F)
                 }
-
-                Return (Package (0x08)
+                Else
                 {
-                    "kUSBSleepPowerSupply",
-                    0x13EC,
-                    "kUSBSleepPortCurrentLimit",
-                    0x0834,
-                    "kUSBWakePowerSupply",
-                    0x13EC,
-                    "kUSBWakePortCurrentLimit",
-                    0x0834
-                })
-            }
-        }
-
-        Scope (\_SB.PCI0.LPCB)
-        {
-            Device (EC)
-            {
-                Name (_HID, "ACID0001")  // _HID: Hardware ID
-                Method (_STA, 0, NotSerialized)  // _STA: Status
-                {
-                    If (_OSI ("Darwin"))
-                    {
-                        Return (0x0F)
-                    }
-                    Else
-                    {
-                        Return (Zero)
-                    }
+                    Return (Zero)
                 }
             }
         }

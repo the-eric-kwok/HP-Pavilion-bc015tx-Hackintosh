@@ -7,6 +7,8 @@
 - BrcmPatchRAM3.kext
 - AirportBrcmFixup.kext
 
+
+
 ## 注意事项
 
 AirportBrcmFixup.kext 是 WiFi 驱动，其余三个是蓝牙驱动。
@@ -15,9 +17,32 @@ AirportBrcmFixup.kext 是 WiFi 驱动，其余三个是蓝牙驱动。
 
 此外，这一套是为了 10.15 搭配使用的，如果你是 10.14 或者更老的版本，应该将 BrcmPatchRAM3.kext 换为 BrcmPatchRAM2.kext （建议从 [DW1820A/BCM94350ZAE/BCM94356ZEPA50DX插入的正确姿势](https://blog.daliansky.net/DW1820A_BCM94350ZAE-driver-inserts-the-correct-posture.html)文中的下载链接下载）
 
+
+
+## Big Sur
+
+Big Sur 中只有 AirPortBrcmNIC 这一个驱动，所以只能驱动以下几种型号
+
+- Pci14e4,43ba
+- Pci14e4,43a3
+- Pci14e4,43a0
+
+随航应该是默认可用的，所以下面的内容可以忽略了
+
+参考[AirportBrcmFixup](https://github.com/acidanthera/AirportBrcmFixup)
+
+
+
 ## 随航
 
+### 修复了
+
+32002 错误
+
+![5](img/5.png)
+
 ### 适用于：
+
 下列三种型号的1820A
 
 - Pci14e4,43ba
@@ -62,13 +87,11 @@ AirPortBrcmNIC：
   已载入：        否...
 ```
 
-我们启动OpenCore配置器，在DeviceProperties中，找到Wi-Fi相关的设备地址，删除它里面的compatible属性
-Clover的话是在设备设置 - 属性中，同样是找到Wi-Fi相关的设备地址，删除它里面的compatible属性
+我们启动OpenCore配置器，在**DeviceProperties**中，找到Wi-Fi相关的设备地址，删除它里面的compatible属性。接着进入**NVRAM**，选择 `7C436110-AB2A-4BBB-A880-FE41995C9F82` 这一项，右边的 **boot-args** 中增加一句 `brcmfx-driver=2 `
 
-接着OC进入NVRAM，选择 7C436110-AB2A-4BBB-A880-FE41995C9F82 这一项，右边的 boot-args 中增加一句 brcmfx-driver=2 
-Clover的话在“引导参数”中点+号增加一个条目，里面填上 brcmfx-driver=2 
+Clover的话是在**设备设置** - **属性**中，同样是找到Wi-Fi相关的设备地址，删除它里面的compatible属性，然后在“引导参数”中点+号增加一个条目，里面填上 `brcmfx-driver=2` 
 
-这一项是让AirportBrcmFixup强制macOS载入AirPortBrcmNIC这个驱动，而不是AirPortBrcm4360
+这是让AirportBrcmFixup强制macOS载入AirPortBrcmNIC这个驱动，而不是AirPortBrcm4360
 以下是AirportBrcmFixup说明书的原文
 
 > brcmfx-driver=0|1|2|3: enables only one kext for loading, 0 - AirPortBrcmNIC-MFG, 1 - AirPortBrcm4360, 2 - AirPortBrcmNIC, 3 - AirPortBrcm4331, also can be injected via DSDT or Properties → DeviceProperties in bootloader
@@ -90,8 +113,3 @@ AirPortBrcmNIC：
 
 （按黑果小兵的教程来看，这个方法似乎也会启用对Apple Watch解锁的支持，我没有Apple Watch，不做测试啦）
 
-### 最后
-
-macOS 11 Big Sur 中移除了 AirPortBrcm4360 这个驱动，所以将来应该会默认驱动 AirPortBrcmNIC 啦，到时候应该就不会有无线随航用不了的问题了，毕竟一旦用不了，就是根本驱动不起来Wi-Fi。
-
- 

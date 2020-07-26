@@ -1,17 +1,24 @@
 # HP Pavillion bc015tx Hackintosh
 
-| 规格      | 详细信息                                                  |
-| --------- | --------------------------------------------------------- |
-| 电脑型号  | HP Pavillion bc015tx                                      |
-| 处理器    | Intel Core i7-6700HQ                                      |
-| 内存      | Hynix 8GB DDR4 2400 MHz                                   |
-| 固态硬盘  | SAMSUNG MZNTY128HDHP-000H1 128GB                          |
-| 机械硬盘  | HGST HTS721010A9E630 1TB                                  |
-| 集成显卡  | Intel HD Graphics 530                                     |
-| 独立显卡  | 无法驱动                                                  |
-| 声卡      | Realtek ALC295 (Layout ID = 28或77)                       |
-| WIFI / BT | DELL DW1820A (Pci14e4,43a3)                               |
-| 有线网卡  | RTL8111/8168/8411 PCI Express Gigabit Ethernet Controller |
+Language:
+
+- [简体中文](README.md)
+- [English](Translation/en/README.md)
+
+
+
+| 规格      | 详细信息                                                     |
+| --------- | ------------------------------------------------------------ |
+| 电脑型号  | HP Pavillion bc015tx                                         |
+| 处理器    | Intel Core i7-6700HQ                                         |
+| 内存      | Hynix 8GB DDR4 2400 MHz                                      |
+| 固态硬盘  | SAMSUNG MZNTY128HDHP-000H1 128GB                             |
+| 机械硬盘  | HGST HTS721010A9E630 1TB                                     |
+| 集成显卡  | Intel HD Graphics 530                                        |
+| 独立显卡  | Nvidia GTX960M                                               |
+| 声卡      | Realtek ALC295 (Layout ID = 28或77)                          |
+| WIFI / BT | <ul><li>原装: Intel AC7265</li><li>更换后: DELL DW1820A (Pci14e4,43a3)</li></ul> |
+| 有线网卡  | RTL8111/8168/8411 PCI Express Gigabit Ethernet Controller    |
 
 
 
@@ -97,7 +104,7 @@ iasl SSDT-xxx.dsl
 
 **BTW，SSDT-BATT和SSDT-Battery功能重复，都是电池热补丁，不过一个是Pavillion 15 通用型补丁，一个是bc015tx专用的补丁，可以根据喜好选择编译使用**
 
-
+**此外，安装时你应该将 OC-config.plist - NVRAM 下的`csr-active-config`设置为`00000000`**
 
 ## 链接
 
@@ -105,3 +112,18 @@ iasl SSDT-xxx.dsl
 
 [Clover](https://github.com/CloverHackyColor/CloverBootloader/releases)
 
+[OC-Little](https://github.com/daliansky/OC-little/)
+
+
+
+## 目录
+
+[关于 1820A 网卡](Docs/About 1820A.md)
+
+[关于原装 Intel AC7265 网卡](Docs/About Intel AC7265.md)
+
+[使用 Hackintool 进行 USB 定制](Docs/使用 Hackintool 进行 USB 定制.md)
+
+[从 VoodooPS2 迁移到 VoodooRMI](Docs/从VoodooPS2迁移到VoodooRMI.md)
+
+[修复开机时的突然断电重启](Docs/修复开机时的突然断电重启.md)
