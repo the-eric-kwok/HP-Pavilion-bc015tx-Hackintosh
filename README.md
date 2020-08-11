@@ -127,3 +127,6 @@ iasl SSDT-xxx.dsl
 [从 VoodooPS2 迁移到 VoodooRMI](Docs/从VoodooPS2迁移到VoodooRMI.md)
 
 [修复开机时的突然断电重启](Docs/修复开机时的突然断电重启.md)
+
+[修复耳机切换的bug](Docs/修复耳机切换的bug.md)
+
