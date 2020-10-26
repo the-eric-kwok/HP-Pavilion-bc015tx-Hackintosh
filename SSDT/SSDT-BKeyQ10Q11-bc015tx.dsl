@@ -42,12 +42,12 @@ DefinitionBlock("", "SSDT", 2, "ERIC", "BrightFN", 0)
     
         Method (_Q11, 0, NotSerialized) // Brightness up
         {
-            // Uncomment these 2 lines for debugging PTSWAK patch
-            \RMDT.P2 ("RMDT:_PTS-Arg0=", \_SB.PCI9.TPTS)
-            \RMDT.P2 ("RMDT:_WAK-Arg0=", \_SB.PCI9.TWAK)
-            
             If (_OSI ("Darwin"))
             {
+                // Uncomment these 2 lines for debugging PTSWAK patch
+                //\RMDT.P2 ("RMDT:_PTS-Arg0=", \_SB.PCI9.TPTS)
+                //\RMDT.P2 ("RMDT:_WAK-Arg0=", \_SB.PCI9.TWAK)
+                
                 Notify(\_SB.PCI0.LPCB.PS2K, 0x0406)    // e0 06 -> F15
                 Notify(\_SB.PCI0.LPCB.PS2K, 0x10)
             }

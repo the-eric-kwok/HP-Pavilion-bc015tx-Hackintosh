@@ -4,8 +4,8 @@ DefinitionBlock("", "SSDT", 2, "OCLT", "NDGP", 0)
     External(_SB.PCI0.PEG0._ON, MethodObj)
     External(_SB.PCI0.PEG0._OFF, MethodObj)
  
-    //If (_OSI ("Darwin"))
-    //{
+    If (_OSI ("Darwin"))
+    {
         Device(DGPU)
         {
             Name(_HID, "DGPU1000")
@@ -35,6 +35,6 @@ DefinitionBlock("", "SSDT", 2, "OCLT", "NDGP", 0)
                 }
             }
         }
-    //}
+    }
 }
 //EOF

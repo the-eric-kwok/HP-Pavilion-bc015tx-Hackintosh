@@ -44,7 +44,7 @@ DefinitionBlock ("", "SSDT", 2, "ERIC", "BATT", 0) {
     External (_SB.PCI0.LPCB.EC0.SW2S, FieldUnitObj)
     External (_SB.PCI0.LPCB.EC0.BACR, FieldUnitObj)
     External (_SB.PCI0.LPCB.EC0.MBST, FieldUnitObj)
-    External (_SB.PCI0.LPCB.EC0.ECOK, FieldUnitObj)
+    External (_SB.PCI0.LPCB.EC0.ECOK, IntObj)
     External (_SB.PCI0.LPCB.EC0.MUT0, MutexObj)
     External (_SB.PCI0.LPCB.EC0.SMB0, FieldUnitObj)
     External (_SB.PCI0.LPCB.EC0.SMW0, FieldUnitObj)
@@ -63,24 +63,15 @@ DefinitionBlock ("", "SSDT", 2, "ERIC", "BATT", 0) {
     External (_SB.PCI0.ACEL.XSTA, MethodObj)
 
     
-    Method (B2WD, 2, NotSerialized) {
+    Method (B1B2, 2, NotSerialized) {
         // Bytes to Word
-        // e.g. B2WD (0x3A, 0x03) -> 0x033A
+        // e.g. B1B2 (0x3A, 0x03) -> 0x033A
         return ((Arg0 | (Arg1 << 8)))
     }
     
-    Method (B2DW, 4, NotSerialized) {
-        // Bytes to DWord
-        // e.g. B2DW (0xA5, 0xB3, 0x42, 0xC1) -> 0xC142B3A5
-        Local0 = (Arg2 | (Arg3 << 8))
-        Local0 = (Arg1 | (Local0 << 8))
-        Local0 = (Arg0 | (Local0 << 8))
-        return (Local0)
-    }
-    
-    Method (WD2B, 3, NotSerialized) {
+    Method (W16B, 3, NotSerialized) {
         // Word to Bytes
-        // e.g. WD2B (ARG0, ARG1, 0x033A) -> ARG0=0x3A, ARG1=0x03
+        // e.g. W16B (ARG0, ARG1, 0x033A) -> ARG0=0x3A, ARG1=0x03
         Arg0 = Arg2
         Arg1 = (Arg2 >> 8)
     }
@@ -206,7 +197,7 @@ DefinitionBlock ("", "SSDT", 2, "ERIC", "BATT", 0) {
                         //Store (Arg3, SMW0)
                         Local0 = 0
                         Local1 = 0
-                        WD2B(Local0, Local1, Arg3)
+                        W16B(Local0, Local1, Arg3)
                         MW00 = Local0
                         MW01 = Local1
                     }
@@ -323,7 +314,7 @@ DefinitionBlock ("", "SSDT", 2, "ERIC", "BATT", 0) {
 
                     If (LEqual (Arg0, 0x09)){
                         //Store (SMW0, Arg3)
-                        Arg3 = B2WD(MW00, MW01)
+                        Arg3 = B1B2(MW00, MW01)
                     }
 
                     If (LEqual (Arg0, 0x0B)){
@@ -389,7 +380,7 @@ DefinitionBlock ("", "SSDT", 2, "ERIC", "BATT", 0) {
     Scope(\_SB.BAT0) {    
         Method (UPBI, 0, NotSerialized) {
             If (_OSI("Darwin")) {
-                Local5 = B2WD(^^PCI0.LPCB.EC0.BFC0, ^^PCI0.LPCB.EC0.BFC1)
+                Local5 = B1B2(^^PCI0.LPCB.EC0.BFC0, ^^PCI0.LPCB.EC0.BFC1)
                 If (LAnd (Local5, LNot (And (Local5, 0x8000)))) {
                     ShiftRight (Local5, 0x05, Local5)
                     ShiftLeft (Local5, 0x05, Local5)
@@ -433,7 +424,7 @@ DefinitionBlock ("", "SSDT", 2, "ERIC", "BATT", 0) {
         Method (UPBS, 0, NotSerialized)
         {
             If (_OSI("Darwin")) {
-                Store (B2WD(^^PCI0.LPCB.EC0.MCU0, ^^PCI0.LPCB.EC0.MCU1), Local0)
+                Store (B1B2(^^PCI0.LPCB.EC0.MCU0, ^^PCI0.LPCB.EC0.MCU1), Local0)
                 If (And (Local0, 0x8000))
                 {
                     If (LEqual (Local0, 0xFFFF))
@@ -453,7 +444,7 @@ DefinitionBlock ("", "SSDT", 2, "ERIC", "BATT", 0) {
                     Store (Local0, Index (PBST, One))
                 }
 
-                Store (B2WD(^^PCI0.LPCB.EC0.MBR0, ^^PCI0.LPCB.EC0.MBR1), Local5)
+                Store (B1B2(^^PCI0.LPCB.EC0.MBR0, ^^PCI0.LPCB.EC0.MBR1), Local5)
                 If (LNot (And (Local5, 0x8000)))
                 {
                     ShiftRight (Local5, 0x05, Local5)
@@ -469,12 +460,81 @@ DefinitionBlock ("", "SSDT", 2, "ERIC", "BATT", 0) {
                     Store (FABL, Index (PBST, 0x02))
                 }
 
-                Store (B2WD(^^PCI0.LPCB.EC0.MBC0, ^^PCI0.LPCB.EC0.MBC1), Index (PBST, 0x03))
+                Store (B1B2(^^PCI0.LPCB.EC0.MBC0, ^^PCI0.LPCB.EC0.MBC1), Index (PBST, 0x03))
                 Store (^^PCI0.LPCB.EC0.MBST, Index (PBST, Zero))
             }
             Else {
                 \_SB.BAT0.XPBS()
             }
         }
+		Method (CBIS, 0, Serialized)
+        {
+            Name (PKG1, Package (0x08)
+            {
+                // config, double check if you have valid AverageRate before
+                // fliping that bit to 0x007F007F since it will disable quickPoll
+                0x006F007F,
+                // ManufactureDate (0x1), AppleSmartBattery format
+                0xFFFFFFFF, 
+                // PackLotCode (0x2)
+                0xFFFFFFFF, 
+                // PCBLotCode (0x3)
+                0xFFFFFFFF, 
+                // FirmwareVersion (0x4)
+                0xFFFFFFFF, 
+                // HardwareVersion (0x5)
+                0xFFFFFFFF, 
+                // BatteryVersion (0x6)
+                0xFFFFFFFF, 
+                0xFFFFFFFF, 
+            })
+            // Check your _BST method for similiar condition of EC accessibility
+            If ((^^PCI0.LPCB.EC0.ECOK == 1))
+            {
+                PKG1 [One] = B1B2 (B1T1, B1T2)
+                PKG1 [0x02] = B1B2 (FUSL, FUSH)
+                PKG1 [0x03] = B1B2 (BMIL, BMIH)
+                PKG1 [0x04] = B1B2 (FMVL, FMVH)
+                PKG1 [0x05] = B1B2 (HIDL, HIDH)
+                PKG1 [0x06] = B1B2 (DAVL, DAVH)
+            }
+
+            Return (PKG1)
+        } // CBIS
+
+        Method (CBSS, 0, Serialized)
+        {
+            Name (PKG1, Package (0x08)
+            {
+                // Temperature (0x10), AppleSmartBattery format
+                0xFFFFFFFF, 
+                // TimeToFull (0x11), minutes (0xFF)
+                0xFFFFFFFF, 
+                // TimeToEmpty (0x12), minutes (0)
+                0xFFFFFFFF, 
+                // ChargeLevel (0x13), percentage
+                0xFFFFFFFF, 
+                // AverageRate (0x14), mA (signed)
+                0xFFFFFFFF, 
+                // ChargingCurrent (0x15), mA
+                0xFFFFFFFF, 
+                // ChargingVoltage (0x16), mV
+                0xFFFFFFFF, 
+                0xFFFFFFFF
+            })
+            // Check your _BST method for similiar condition of EC accessibility
+            If ((^^PCI0.LPCB.EC0.ECOK == 1))
+            {
+                PKG1 [Zero] = B1B2 (BTM1, BTM2)
+                PKG1 [One] = B1B2 (BCL1, BCL2)
+                PKG1 [0x02] = B1B2 (BCW1, BCW2)
+                PKG1 [0x03] = B1B2 (BPR1, BPR2)
+                PKG1 [0x04] = B1B2 (BAR1, BAR2)
+                PKG1 [0x05] = B1B2 (BCC1, BCC2)
+                PKG1 [0x06] = B1B2 (BCV1, BCV2)
+            }
+
+            Return (PKG1)
+        } // CBSS
     }
 }
