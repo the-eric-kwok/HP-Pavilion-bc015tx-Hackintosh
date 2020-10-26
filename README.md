@@ -116,6 +116,14 @@ iasl SSDT-xxx.dsl
 
 
 
+## 打赏
+
+![wx](img/wx.jpg)
+
+![zfb](img/zfb.png)
+
+
+
 ## 目录
 
 [关于 1820A 网卡](Docs/About_1820A.md)
