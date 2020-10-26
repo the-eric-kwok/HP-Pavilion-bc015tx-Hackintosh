@@ -16,7 +16,7 @@ Language:
 | 机械硬盘  | HGST HTS721010A9E630 1TB                                     |
 | 集成显卡  | Intel HD Graphics 530                                        |
 | 独立显卡  | Nvidia GTX960M                                               |
-| 声卡      | Realtek ALC295 (Layout ID = 28或77)                          |
+| 声卡      | Realtek ALC295 (Layout ID = 24)                          |
 | WIFI / BT | <ul><li>原装: Intel AC7265</li><li>更换后: DELL DW1820A (Pci14e4,43a3)</li></ul> |
 | 有线网卡  | RTL8111/8168/8411 PCI Express Gigabit Ethernet Controller    |
 
@@ -38,10 +38,10 @@ Language:
 5. 无线网卡（更换为1820A后完美，可随航，原装卡(AC7265)可以考虑[itlwm](https://github.com/OpenIntelWireless/itlwm)配合[HeliPort](https://github.com/OpenIntelWireless/HeliPort)，但是性能还比较差，丢包严重）
 6. 蓝牙（如果是原装卡用[IntelBluetoothFirmware](https://github.com/OpenIntelWireless/IntelBluetoothFirmware)）
 7. 电池电量（SSDT-BatteryFix.dsl）
-8. 触摸板手势部分可用（PS2触控板对多指手势支持不好）
+8. 触摸板手势可用（切换到VoodooRMI解决多指触控问题）
 9. 睡眠基本正常
 10. 变频正常
-11. 支持原生亮度快捷键（SSDT-BKeyQ10Q11.dsl）
+11. 支持原生亮度快捷键（BrightnessKey.kext）
 12. 支持原生多媒体控制键（自动支持了）
 13. 支持读卡器（通过Sinetek-rtsx.kext）
 14. 交换了左侧的 Windows（现为⌘）和 Alt（现为⌥）键，右侧 Alt 依旧作为 ⌘ 键，方便使用删除文件快捷键（SSDT-SwapCmdOpt.dsl）
