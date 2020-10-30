@@ -1,0 +1,5 @@
+import os
+
+for i in range(0x0, 0x100):
+    os.system("alc-verb 0x1b 0x707 0x%x" % i)
+    input()

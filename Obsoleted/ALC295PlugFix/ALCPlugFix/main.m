@@ -107,7 +107,7 @@ int main(int argc, const char * argv[]) {
         sourceAddr.mElement = kAudioObjectPropertyElementMaster;
 
         NSString *output1 = [@"alc-verb 0x19 SET_PIN_WIDGET_CONTROL 0x20" runAsCommand];
-        //NSString *output2 = [@"alc-verb 0x1a SET_PIN_WIDGET_CONTROL 0x20" runAsCommand];
+        NSString *output2 = [@"alc-verb 0x1b SET_PIN_WIDGET_CONTROL 0x0" runAsCommand];
 
         AudioObjectAddPropertyListenerBlock(defaultDevice, &sourceAddr, dispatch_get_global_queue (DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^(UInt32 inNumberAddresses, const AudioObjectPropertyAddress * inAddresses) {
 
@@ -118,12 +118,12 @@ int main(int argc, const char * argv[]) {
                 // Recognized as internal speakers
                 NSLog(@"Headphones removed! Fixing!");
                 NSString *output1 = [@"alc-verb 0x19 SET_PIN_WIDGET_CONTROL 0x20" runAsCommand];
-                //NSString *output2 = [@"alc-verb 0x1a SET_PIN_WIDGET_CONTROL 0x20" runAsCommand];
+                NSString *output2 = [@"alc-verb 0x1b SET_PIN_WIDGET_CONTROL 0x0" runAsCommand];
             } else if (bDataSourceId == 'hdpn') {
                 // Recognized as headphones
                 NSLog(@"Headphones inserted! Fixing!");
                 NSString *output1 = [@"alc-verb 0x19 SET_PIN_WIDGET_CONTROL 0x20" runAsCommand];
-                //NSString *output2 = [@"alc-verb 0x1a SET_PIN_WIDGET_CONTROL 0x20" runAsCommand];
+                NSString *output2 = [@"alc-verb 0x1b SET_PIN_WIDGET_CONTROL 0x1" runAsCommand];
             }
         });
 
