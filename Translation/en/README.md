@@ -31,10 +31,10 @@
 5. Wi-Fi (Works perfectly after replace with 1820A, Sidecar, Handoff, Airdrop is working as well. If you are using the original card, you can consider about [itlwm](https://github.com/OpenIntelWireless/itlwm) with [HeliPort](https://github.com/OpenIntelWireless/HeliPort), but the package loss is a pain in the ass. )
 6. Bluetooth (Original card use [IntelBluetoothFirmware](https://github.com/OpenIntelWireless/IntelBluetoothFirmware)）
 7. Battery percentage（SSDT-BatteryFix.dsl）
-8. Trackpad partially working（PS2触控板对多指手势支持不好）
-9. Sleep partially working
+8. Trackpad
+9. Sleep
 10. CPU power management
-11. Brightness keys (SSDT-BKeyQ10Q11.dsl)
+11. Brightness keys (BrightnessKey.kext)
 12. Media keys
 13. Card reader (by Sinetek-rtsx.kext)
 14. Switch between left Windows (now is ⌘) and Alt (now is ⌥ ). Right Alt remains as ⌘, so the `⌘Del` is more convincing (by SSDT-SwapCmdOpt.dsl)
