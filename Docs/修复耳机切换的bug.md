@@ -1,29 +1,19 @@
-# 修复耳机切换bug
+# 修复耳机孔、静音键LED
 
 ## bug 表现
 
-对于国行有麦耳机（黑色圈圈），在 Windows 下使用时发声正常，而在 macOS 下则出现发声沉闷，需要按住耳机中间按钮才能正常使用的情况。
+对于国行有麦耳机（OMTP标准），在 Windows 下使用时发声正常，而在 macOS 下则出现发声沉闷，需要按住耳机中间按钮才能正常使用的情况。
 
-根据 Windows 表现可推断具有切换耳机引脚定义的功能，尝试使用 ALCPlugFix 配合 CodecCommander + AppleALC 发现成功修复了此 bug
+根据 Windows 表现可推断该声卡具有切换耳机引脚定义的功能，使用 ALCPlugFix 成功修复了此 bug
 
 
 
 ## 修复方法
 
-1. 将 CodecCommander.kext 放到 kexts 中并修改配置，保证其加载，并且重启使其生效
+见[此处](../ALCPlugFix)
 
-2. 按 ⌘空格 组合键调出 Spotlight，搜索“终端”
+## 原理
 
-3. 接着输入 `cd` ，后面跟一个空格
+使用 alc-verb 向 `IOHDADodecDevice` 发送 SET_PIN_WIDGET_CONTROL 命令，将 0x19 节点的 Pin-ctls 设置为 0x24，即可让声音正常。
 
-4. 将 ALCPlugFix 文件夹拖入终端
-
-5. 按下回车
-
-6. 然后输入
-
-   ```
-   ./install.sh
-   ```
-
-7. 重启
+此外还误打误撞发现 0x1b 节点的 Pin-ctls 若是设置为 0x1 则静音键LED亮起，设置为 0x0 则熄灭，故通过监听系统静音事件的方式，当系统进入静音状态时将 0x1b 节点设为 0x1，解除静音状态时设为 0x0。
