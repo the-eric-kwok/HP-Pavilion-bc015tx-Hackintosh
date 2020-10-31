@@ -1,6 +1,6 @@
 ---
 name: I can't boot
-about: 
+about: System refuse to start, System panic, etc.
 title: "[Can't Boot]"
 labels: can't boot
 assignees: the-eric-kwok
