@@ -1,6 +1,6 @@
 ---
 name: I can't boot
-about: Tamplate of EFI can't boot
+about: 
 title: "[Can't Boot]"
 labels: can't boot
 assignees: the-eric-kwok
