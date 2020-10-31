@@ -17,7 +17,7 @@
 
 打开 Hackintool，切换到 USB 选项卡
 
-![2](img/2.png)
+![2](../img/2.png)
 
 首先对于机身内部的设备（如蓝牙和摄像头），应该选择内置 Internal
 
@@ -35,11 +35,11 @@
 
 定制完成后点击右下角的导出图标
 
-![3](img/3.png)
+![3](../img/3.png)
 
 会在桌面上生成六个文件
 
-![4](img/4.png)
+![4](../img/4.png)
 
 如果已经做过 SSDT-EC-USBX.aml 的补丁的话，我们将 USBPorts.kext 放到 kexts 下面就可以了
 
