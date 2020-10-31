@@ -118,9 +118,7 @@ iasl SSDT-xxx.dsl
 
 ## 打赏
 
-![wx](img/wx.jpg)
-
-![zfb](img/zfb.png)
+![donation](img/donate.png)
 
 
 
