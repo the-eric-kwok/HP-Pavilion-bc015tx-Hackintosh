@@ -22,6 +22,63 @@ Language:
 
 
 
+## 如何使用
+
+1. 在 [Release ](https://github.com/the-eric-kwok/HP-Pavillion-bc015tx-Hackintosh/releases/latest)中下载最新版本的 EFI
+
+2. 如果你是在 Windows 下：
+
+   1. 使用 TransMac 或 Etcher 将别人制作好的镜像烧录到 U 盘**（会清除 U 盘上所有数据）**
+   2. 使用 Disk Genius 挂载 U 盘的 EFI 分区，并且在 Disk Genius 中使用此 EFI 替换掉原有的 EFI 文件夹
+   3. 将 config-install.plist 重命名为 config.plist
+   4. 重启选择 U 盘启动，进入安装进程
+
+3. 如果你是在 macOS 下：
+
+   1. 在 AppStore 中搜索 macOS 下载镜像，此处假设我们下载的是 macOS 10.15
+
+   2. 插入 U 盘
+
+   3. 打开终端
+
+   4. 打开 Finder，在 `Applications` 文件夹中找到我们刚刚下载好的安装包 `Install macOS Catalina.app`
+
+   5. 将这个安装包按住，拖动到终端窗口中松手，我们会发现它变成了一串路径，如 `/Applications/Install\ macOS\ Catalina.app`，此处如果末尾 .app 后面有空格的话要删掉空格
+
+   6. 接着输入 `/Contents/Resources/createinstallmedia --volume`，此处注意 volume 前是双杠，volume 后加上一个空格
+
+   7. 然后在桌面上找到我们的 U 盘图标，拖动到终端窗口中松手
+
+   8. 此时将拼凑出一个命令，如 
+
+      ```
+      /Applications/Install\ macOS\ Catalina.app/Contents/Resources/createinstallmedia --volume /Volumes/FlashDisk
+      ```
+
+      回车执行，macOS会将镜像写入 U 盘**（将会抹除 U 盘中所有数据）**
+
+   9. 使用 OpenCore Configurator 挂载 U 盘的 EFI 分区，将下载好的 EFI 放入其中
+
+   10. 进入 EFI 文件夹中，将 config-install.plist 改名为 config.plist
+
+   11. 将 U 盘插入目标机，选择 U 盘启动，进入安装进程
+
+4. 安装完成后进入 macOS，下载 OpenCore Configurator，挂载系统盘和 U 盘的 EFI 分区
+
+5. 进入 <u>U 盘 EFI 分区</u>中的 EFI 文件夹，将 BOOT 和 OC 两个文件夹复制到<u>系统盘 EFI 分区</u>下的 EFI 文件夹中。此处不能整个 EFI 替换，否则将会覆盖 Windows 启动项导致 Windows 无法启动
+
+6. 进入 OC 文件夹，删除 config.plist，并根据你的无线网卡和系统版本选择需要的 config 并改名为 config.plist，假设你使用的是原装的 Intel AC7265 网卡，系统版本为 macOS 10.15，则将 config-Intel7265AC-Catalina.plist 改名为 config.plist 
+
+7. 拔出 U 盘，重启进入系统
+
+
+
+#### 我无法启动怎么办？
+
+提交 [issue](https://github.com/the-eric-kwok/HP-Pavillion-bc015tx-Hackintosh/issues/new)，附上无法启动的屏幕照片，说明你安装的系统版本、使用的 EFI 版本，已经进行了什么操作等。信息越全面越容易被解决。
+
+
+
 ## 无法驱动
 
 1. 独立显卡

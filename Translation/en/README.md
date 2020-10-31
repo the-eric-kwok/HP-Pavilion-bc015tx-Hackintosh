@@ -15,6 +15,64 @@
 
 
 
+## Usage
+
+1. Download latest EFI in [Release ](https://github.com/the-eric-kwok/HP-Pavillion-bc015tx-Hackintosh/releases/latest)
+
+2. If you are under Windows:
+
+   1. Write installer to your flash disk via TransMac or Etcher. **This will erase all data from your flash disk**
+   2. Mount EFI partition of your flash disk with Disk Genius, and replace the original EFI with downloaded one.
+   3. Rename config-install.plist to config.plist
+   4. Reboot and press F9 to select boot from flash disk
+   5. Install
+
+3. If you are under macOS:
+
+   1. Search macOS in AppStore and download it. Assuming we're downloading macOS 10.15
+
+   2. Insert your USB flash disk
+
+   3. Open Terminal.app
+
+   4. Open Finder, find `Install macOS Catalina.app` under `Applications`
+
+   5. Drag and drop this app to terminal. It will be convert to a string of path, such as `/Applications/Install\ macOS\ Catalina.app`. Note that if there is a space behind `.app`, delete that space.
+
+   6. then input `/Contents/Resources/createinstallmedia --volume`. Note that there is double-slash in front of `volume`, and a space behind it.
+
+   7. Goto desktop, drag and drop the USB flash icon to terminal
+
+   8. Finally we got a command, such as
+
+      ```
+      /Applications/Install\ macOS\ Catalina.app/Contents/Resources/createinstallmedia --volume /Volumes/FlashDisk
+      ```
+
+      and hit return. The createinstallmedia tool will write the installer to your USB flash. **This will erase all data from your flash disk**
+
+   9. Mount EFI partition of USB flash with OpenCore Configurator, and put the EFI folder into it.
+
+   10. Goto EFI folder inside EFI partition and rename config-install.plist to config.plist
+
+   11. Eject flash disk and insert it to your target machine. Boot with key F9 pressed and select boot from USB flash disk.
+
+4. After installation, boot into macOS, install OpenCore Configurator and mount both system EFI partition and EFI partition of your USB flash.
+
+5. Goto EFI folder under <u>EFI partition of your USB flash</u>. Then copy BOOT and OC folder to EFI folder under <u>system EFI partition</u>. Note that on this step, do not replace entire EFI folder because there might be a Microsoft boot loader in your original EFI. Delete that means you cannot boot into Windows anymore.
+
+6. Goto OC folder and delete config.plist. Then chose config file according to your Wi-Fi card and system version. For example I'm using Intel Wireless 7265 AC and macOS 10.15, I rename `config-Intel7265AC-Catalina.plist` to `config.plist`
+
+7. Eject USB flash and reboot into macOS
+
+
+
+#### What if my machine refuse to boot
+
+Submit an [issue](https://github.com/the-eric-kwok/HP-Pavillion-bc015tx-Hackintosh/issues/new), attach the screenshot of where you stuck, which version of macOS are you using, which version of EFI are you using, etc. 
+
+
+
 ## Not Working
 
 1. Nvidia DGPU
