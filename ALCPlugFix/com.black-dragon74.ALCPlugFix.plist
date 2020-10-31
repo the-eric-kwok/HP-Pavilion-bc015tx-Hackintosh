@@ -16,8 +16,8 @@
 	<key>ServiceIPC</key>
 	<false/>
 	<key>StandardErrorPath</key>
-	<string>/tmp/alcplugfix.log</string>
+	<string>/tmp/alcplugfix_err.log</string>
 	<key>StandardOutPath</key>
-	<string>/tmp/alcplugfix.log</string>
+	<string>/tmp/alcplugfix_std.log</string>
 </dict>
 </plist>

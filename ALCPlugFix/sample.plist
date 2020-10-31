@@ -62,7 +62,7 @@
 		<key>Node ID</key>
 		<string>0x19</string>
 		<key>On Boot</key>
-		<false/>
+		<true/>
 		<key>On Connect</key>
 		<true/>
 		<key>On Disconnect</key>
