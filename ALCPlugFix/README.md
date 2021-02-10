@@ -30,7 +30,7 @@ This script will install `ALCPlugFix-Swift` into `/usr/local/bin` , and `sample.
 
 ## Dependency 依赖
 
-This fix requires AppleALC version 1.5.4+ or the patch of commit [61e2bbf](https://github.com/acidanthera/AppleALC/commit/61e2bbfe74bf1c12ebf770ed4a9776a04a7758f2) applied. If you don't know where to download that, there is a zip under this folder and have a functional AppleALC inside.
+This fix requires AppleALC version 1.5.4+ or the patch of commit [61e2bbf](https://github.com/acidanthera/AppleALC/commit/61e2bbfe74bf1c12ebf770ed4a9776a04a7758f2) applied. 
 
-此修复方法依赖于 v1.5.4 之后的 AppleALC，如果你不知道在哪里可以下载，我在文件夹里提供了一个可以工作的版本。
+此修复方法依赖于 v1.5.4 之后的 AppleALC。
 

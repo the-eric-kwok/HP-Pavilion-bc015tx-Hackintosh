@@ -1,8 +1,8 @@
-# HP Pavillion bc015tx Hackintosh
+# HP Pavilion bc015tx Hackintosh
 
 | Part       | Info                                                         |
 | ---------- | ------------------------------------------------------------ |
-| Model      | HP Pavillion bc015tx                                         |
+| Model      | HP Pavilion bc015tx                                          |
 | CPU        | Intel Core i7-6700HQ                                         |
 | Mem        | Hynix 8GB DDR4 2400 MHz                                      |
 | SSD        | SAMSUNG MZNTY128HDHP-000H1 128GB                             |
@@ -17,7 +17,7 @@
 
 ## Usage
 
-1. Download latest EFI in [Release ](https://github.com/the-eric-kwok/HP-Pavillion-bc015tx-Hackintosh/releases/latest)
+1. Download latest EFI in [Release ](https://github.com/the-eric-kwok/HP-Pavilion-bc015tx-Hackintosh/releases/latest)
 
 2. If you are under Windows:
 
@@ -69,7 +69,7 @@
 
 #### What if my machine refuse to boot
 
-Submit an [issue](https://github.com/the-eric-kwok/HP-Pavillion-bc015tx-Hackintosh/issues/new), attach the screenshot of where you stuck, which version of macOS are you using, which version of EFI are you using, etc. 
+Submit an [issue](https://github.com/the-eric-kwok/HP-Pavilion-bc015tx-Hackintosh/issues/new), attach the screenshot of where you stuck, which version of macOS are you using, which version of EFI are you using, etc. 
 
 
 
@@ -119,6 +119,32 @@ Press F10 at boot time to enter BIOS, disable Intel SGX and Secure Boot.
 ![IMG_1674](../../img/IMG_1674.jpeg)
 
 ![IMG_1675](../../img/IMG_1675.jpeg)
+
+ 
+
+## Themes
+
+There are 3 themes in my EFI, they are:
+
+Default:
+
+![Default](../../img/Theme-Default.png)
+
+
+
+Modern:
+
+![Modern](../../img/Theme-Modern.png)
+
+
+
+Old:
+
+![Old](../../img/Theme-Old.png)
+
+
+
+You can select between them inside your config.plist: Misc -> Boot -> PickerVariant
 
 
 

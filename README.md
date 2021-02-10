@@ -1,4 +1,4 @@
-# HP Pavillion bc015tx Hackintosh
+# HP Pavilion bc015tx Hackintosh
 
 Language:
 
@@ -9,14 +9,14 @@ Language:
 
 | 规格      | 详细信息                                                     |
 | --------- | ------------------------------------------------------------ |
-| 电脑型号  | HP Pavillion bc015tx                                         |
+| 电脑型号  | HP Pavilion bc015tx                                          |
 | 处理器    | Intel Core i7-6700HQ                                         |
 | 内存      | Hynix 8GB DDR4 2400 MHz                                      |
 | 固态硬盘  | SAMSUNG MZNTY128HDHP-000H1 128GB                             |
 | 机械硬盘  | HGST HTS721010A9E630 1TB                                     |
 | 集成显卡  | Intel HD Graphics 530                                        |
 | 独立显卡  | Nvidia GTX960M                                               |
-| 声卡      | Realtek ALC295 (Layout ID = 24)                          |
+| 声卡      | Realtek ALC295 (Layout ID = 24)                              |
 | WIFI / BT | <ul><li>原装: Intel AC7265</li><li>更换后: DELL DW1820A (Pci14e4,43a3)</li></ul> |
 | 有线网卡  | RTL8111/8168/8411 PCI Express Gigabit Ethernet Controller    |
 
@@ -24,7 +24,7 @@ Language:
 
 ## 如何使用
 
-1. 在 [Release ](https://github.com/the-eric-kwok/HP-Pavillion-bc015tx-Hackintosh/releases/latest)中下载最新版本的 EFI
+1. 在 [Release ](https://github.com/the-eric-kwok/HP-Pavilion-bc015tx-Hackintosh/releases/latest)中下载最新版本的 EFI
 
 2. 如果你是在 Windows 下：
 
@@ -75,7 +75,7 @@ Language:
 
 #### 我无法启动怎么办？
 
-提交 [issue](https://github.com/the-eric-kwok/HP-Pavillion-bc015tx-Hackintosh/issues/new)，附上无法启动的屏幕照片，说明你安装的系统版本、使用的 EFI 版本，已经进行了什么操作等。信息越全面越容易被解决。
+提交 [issue](https://github.com/the-eric-kwok/HP-Pavilion-bc015tx-Hackintosh/issues/new)，附上无法启动的屏幕照片，说明你安装的系统版本、使用的 EFI 版本，已经进行了什么操作等。信息越全面越容易被解决。
 
 
 
@@ -83,6 +83,7 @@ Language:
 
 1. 独立显卡
 2. HDMI输出（HDMI走的独显，故无解）
+3. 启动提示音（[OC的锅](https://github.com/acidanthera/bugtracker/issues/740#issuecomment-734910619)）
 
 
 
@@ -128,6 +129,32 @@ Language:
 
 
 
+## 主题
+
+EFI中内置了三款主题，分别是：
+
+Default:
+
+![Default](./img/Theme-Default.png)
+
+
+
+Modern:
+
+![Modern](./img/Theme-Modern.png)
+
+
+
+Old:
+
+![Old](./img/Theme-Old.png)
+
+
+
+你可以在 config.plist 的 Misc -> Boot -> PickerVariant 中切换。
+
+
+
 ## ⚠️警告⚠️
 
 十分不建议直接下载kexts文件夹中的kext使用，你应该按照对应的kext名字进行搜索，并且使用最新版本的kext。
@@ -159,7 +186,7 @@ iasl SSDT-xxx.dsl
 
 我的SSDT很多都是照抄OC-Little库中的，所以OC-Little**一定要自己看了理解实践**，这样才能打造一个属于你的完美黑苹果！
 
-**BTW，SSDT-BATT和SSDT-Battery功能重复，都是电池热补丁，不过一个是Pavillion 15 通用型补丁，一个是bc015tx专用的补丁，可以根据喜好选择编译使用**
+**BTW，SSDT-BATT和SSDT-Battery功能重复，都是电池热补丁，不过一个是Pavilion 15 通用型补丁，一个是bc015tx专用的补丁，可以根据喜好选择编译使用**
 
 **此外，安装时你应该将 OC-config.plist - NVRAM 下的`csr-active-config`设置为`00000000`**
 
