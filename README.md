@@ -105,6 +105,10 @@ Language:
 14. 交换了左侧的 Windows（现为⌘）和 Alt（现为⌥）键，右侧 Alt 依旧作为 ⌘ 键，方便使用删除文件快捷键（SSDT-SwapCmdOpt.dsl）
 
 
+## 支持的 OS 版本
+只在 macOS Catalina 和 macOS Big Sur 上测试过，更低版本的 macOS 未经测试，不保证可用性。
+（当前我停留在了 Catalina，暂时没有更换 Big Sur 的打算，所以可能有一些兼容问题无法解决，请见谅）
+
 
 ## 关于 1820A
 
@@ -114,7 +118,6 @@ Language:
 - BrcmFirmwareData.kext
 - BrcmPatchRAM3.kext
 - AirportBrcmFixup.kext
-
 
 
 ## BIOS设置
@@ -153,42 +156,141 @@ Old:
 
 你可以在 config.plist 的 Misc -> Boot -> PickerVariant 中切换。
 
+如果需要其他主题的话，请参考：
+
+[Dortina 教程](https://dortania.github.io/OpenCore-Post-Install/cosmetic/gui.html)
+[LuckyCrack/OpenCore-Themes](https://github.com/LuckyCrack/OpenCore-Themes)
+[chris1111/My-Simple-OC-Themes](https://github.com/chris1111/My-Simple-OC-Themes)
+[LAbyOne/OpenCore-Themes-Downloader](https://github.com/LAbyOne/OpenCore-Themes-Downloader)
 
 
-## ⚠️警告⚠️
 
-十分不建议直接下载kexts文件夹中的kext使用，你应该按照对应的kext名字进行搜索，并且使用最新版本的kext。
+## 如果你的电池电量不更新 / 无法充电 / 开机时提示“非 HP 电池“
+ACEL 设备是一个惠普 HP 笔记本特有的设备，是加速度传感器，通常提供硬盘的跌落保护，然而在其 ADJT 方法中有一处错误的 SMWR 调用，导致在 MacOS 下 EC 读写异常，进而出现电量不更新、无法充电、显示为电池未在充电、开机提示“非 HP 电池”等问题，并且此问题出现后在 Windows 中也同样会出现。
 
-SSDT中的dsl文件需要用MaciASL或者AIDA64工程版或者iASL编译成aml文件再放到ACPI下注入
+我们可以尝试通过禁止 ACEL 设备或修正 ADJT 内部调用顺序的方式进行修复。
+
+源代码：
+```
+Method (ADJT, 0, Serialized)
+{
+    If (_STA ())
+    {
+        If (LEqual (^^LPCB.EC0.ECOK, One))
+        {
+            Store (^^LPCB.EC0.SW2S, Local0)
+        }
+        Else
+        {
+            Store (PWRS, Local0)
+        }
+
+        If (LAnd (LEqual (^^^LID0._LID (), Zero), LEqual (Local0, Zero)))
+        {
+            If (LNotEqual (CNST, One))
+            {
+                Store (One, CNST)
+                Store (Zero, ^^LPCB.EC0.PLGS)
+                ^^LPCB.EC0.SMWR (0xC6, 0x50, 0x24, Zero)
+                Sleep (0x0BB8)
+                ^^LPCB.EC0.SMWR (0xC6, 0x50, 0x36, 0x14)
+                ^^LPCB.EC0.SMWR (0xC6, 0x50, 0x37, 0x10)
+                ^^LPCB.EC0.SMWR (0xC6, 0x50, 0x34, 0x2A)
+                ^^LPCB.EC0.SMWR (0xC6, 0x50, 0x22, 0x20)
+            }
+        }
+        ElseIf (LNotEqual (CNST, Zero))
+        {
+            Store (Zero, CNST)
+            ^^LPCB.EC0.SMWR (0xC6, 0x50, 0x22, 0x40)  // <------
+            ^^LPCB.EC0.SMWR (0xC6, 0x50, 0x36, One)
+            ^^LPCB.EC0.SMWR (0xC6, 0x50, 0x37, 0x50)
+            ^^LPCB.EC0.SMWR (0xC6, 0x50, 0x34, 0x7F)
+            ^^LPCB.EC0.SMWR (0xC6, 0x50, 0x24, 0x02)
+            Store (One, ^^LPCB.EC0.PLGS)
+        }
+    }
+}
+```
+将箭头指向的语句放到末尾即可
+
+修改后：
+```
+        ...
+        ElseIf (LNotEqual (CNST, Zero))
+        {
+            Store (Zero, CNST)
+            ^^LPCB.EC0.SMWR (0xC6, 0x50, 0x36, One)
+            ^^LPCB.EC0.SMWR (0xC6, 0x50, 0x37, 0x50)
+            ^^LPCB.EC0.SMWR (0xC6, 0x50, 0x34, 0x7F)
+            ^^LPCB.EC0.SMWR (0xC6, 0x50, 0x24, 0x02)
+            Store (One, ^^LPCB.EC0.PLGS)
+            ^^LPCB.EC0.SMWR (0xC6, 0x50, 0x22, 0x40)  // <------
+        }
+        ...
+```
+
+**修改之后需要长按电源键十秒钟来重置 EC，之后正常进入系统即可恢复！**
+
+本 repo 中使用直接禁用 ACEL 设备的方式解决，如果在你的 HP 本子上禁用 ACEL 仍未解决，可参照上文方法修改 ADJT 方法并在 SSDT-BATT 中删除 \_STA 方法，以及在 config 文件中删除 `\[BATT\] Rename ACEL.\_STA to XSTA` 这个重命名补丁；然后将修改后的 ADJT 方法放入 SSDT-BATT.aml 中加载，并在 config 文件的 ACPI -> Patch 中加上：
+```
+Comment: [BATT] Rename ADJT to XDJT
+Find:    4143454C 08
+Replace: 5843454C 08
+```
+
+
+## 如果你的电量百分比 macOS 与 Windows 下有偏差
+检查你的 DSDT 的 \_BST 方法，看看其中是否包含了这几行
 
 ```
-# 命令行中输入此命令
-iasl SSDT-xxx.dsl
-
-# Windows下可能是这样的
-# C:\User\Someone\Downloads\iasl.exe SSDT=xxx.dsl
+If (LEqual (BRTE, Zero))
+{
+    Store (0xFFFFFFFF, Index (PBST, One))
+}
 ```
 
-添加了SSDT-aml文件夹，如果不方便编译的可以先添加一些必备的SSDT，但是**一定要按照dsl文件中的注释进行二进制替换（即OC config ACPI中的Patch栏）！**
+如果是的话把 \_BST 方法放到 SSDT-BATT.aml 中，并且将 SSDT-BATT.aml 中的 \_BST 方法中的这几行删掉，如：
 
-必备的SSDT：
+```
+Method (_BST, 0, NotSerialized)  // _BST: Battery Status
+{
+    If (LEqual (^^PCI0.LPCB.EC0.ECOK, One))
+    {
+        If (^^PCI0.LPCB.EC0.MBTS)
+        {
+            UPBS ()
+        }
+        Else
+        {
+            IVBS ()
+        }
+    }
+    Else
+    {
+        IVBS ()
+    }
 
-- SSDT-EC-USBX
-- SSDT-NDGP_OFF
-- SSDT-PLUG-_PR.CPU0
-- SSDT-PNLF-SKL_KBL
-- SSDT-SBUS
-- ~~SSDT-ALS0~~ 现在合并入 SSDT-AddDev 了
+    //If (LEqual (BRTE, Zero))  //注释掉这几行
+    //{
+    //    Store (0xFFFFFFFF, Index (PBST, One))
+    //}
 
-其他的SSDT多为完善功能用，其重要性并没有上面这些重要。建议先确保系统能进去了再一个个试着添加。
+    Return (PBST)
+}
+```
 
-如果进不去系统，请参照[OC-Little](https://github.com/daliansky/OC-little/)对自己的SSDT进行调整。
+然后重新编译 SSDT-BATT.aml，并且在 config 文件中 ACPI -> Patch 加上：
 
-我的SSDT很多都是照抄OC-Little库中的，所以OC-Little**一定要自己看了理解实践**，这样才能打造一个属于你的完美黑苹果！
+```
+Comment: Rename _BST to XBST
+Find:    5F425354 00
+Replace: 58425354 00
+```
 
-**BTW，SSDT-BATT和SSDT-Battery功能重复，都是电池热补丁，不过一个是Pavilion 15 通用型补丁，一个是bc015tx专用的补丁，可以根据喜好选择编译使用**
+重启即可
 
-**此外，安装时你应该将 OC-config.plist - NVRAM 下的`csr-active-config`设置为`00000000`**
+
 
 ## 链接
 
