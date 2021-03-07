@@ -165,8 +165,8 @@ Old:
 
 
 
-## 关于 ACEL 设备
-这是一个惠普 HP 笔记本特有的设备，是加速度传感器，通常提供硬盘的跌落保护，然而在其 ADJT 方法中有一处错误的 SMWR 调用，导致在 MacOS 下 EC 读写异常，进而出现电量不更新、无法充电、显示为电池未在充电、开机提示“非 HP 电池”等问题，并且此问题出现后在 Windows 中也同样会出现。
+## 如果你的电池电量不更新 / 无法充电 / 开机时提示“非 HP 电池“
+ACEL 设备是一个惠普 HP 笔记本特有的设备，是加速度传感器，通常提供硬盘的跌落保护，然而在其 ADJT 方法中有一处错误的 SMWR 调用，导致在 MacOS 下 EC 读写异常，进而出现电量不更新、无法充电、显示为电池未在充电、开机提示“非 HP 电池”等问题，并且此问题出现后在 Windows 中也同样会出现。
 
 我们可以尝试通过禁止 ACEL 设备或修正 ADJT 内部调用顺序的方式进行修复。
 
@@ -238,6 +238,57 @@ Comment: [BATT] Rename ADJT to XDJT
 Find:    4143454C 08
 Replace: 5843454C 08
 ```
+
+
+## 如果你的电量百分比 macOS 与 Windows 下有偏差
+检查你的 DSDT 的 \_BST 方法，看看其中是否包含了这几行
+
+```
+If (LEqual (BRTE, Zero))
+{
+    Store (0xFFFFFFFF, Index (PBST, One))
+}
+```
+
+如果是的话把 \_BST 方法放到 SSDT-BATT.aml 中，并且将 SSDT-BATT.aml 中的 \_BST 方法中的这几行删掉，如：
+
+```
+Method (_BST, 0, NotSerialized)  // _BST: Battery Status
+{
+    If (LEqual (^^PCI0.LPCB.EC0.ECOK, One))
+    {
+        If (^^PCI0.LPCB.EC0.MBTS)
+        {
+            UPBS ()
+        }
+        Else
+        {
+            IVBS ()
+        }
+    }
+    Else
+    {
+        IVBS ()
+    }
+
+    //If (LEqual (BRTE, Zero))  //注释掉这几行
+    //{
+    //    Store (0xFFFFFFFF, Index (PBST, One))
+    //}
+
+    Return (PBST)
+}
+```
+
+然后重新编译 SSDT-BATT.aml，并且在 config 文件中 ACPI -> Patch 加上：
+
+```
+Comment: Rename _BST to XBST
+Find:    5F425354 00
+Replace: 58425354 00
+```
+
+重启即可
 
 
 
