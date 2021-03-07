@@ -7,13 +7,15 @@ DefinitionBlock ("", "SSDT", 2, "ERIC", "KeyBd", 0)
         {
             "Keyboard", Package()
             {
-                "Custom ADB Map", Package()
+				// Comment below 8 lines to unmap right alt to command
+                "Custom ADB Map", 
+                Package (0x04)
                 {
-                    Package(){},
-                    "e05b=3a",    // Left Windows to Command
-                    "38=37",      // Left alt to Option
-                    "e038=3a"     // Right alt to Command
-                },
+                    Package (0x00){}, 
+                    "e05b=37", 
+                    "38=3a", 
+                    "e038=37"
+                }, 
 				
 				// Comment below 2 lines to map prtsc as F13 
 				// (So that you can set them as a hotkey of screen shot)

@@ -63,29 +63,36 @@ DefinitionBlock ("", "SSDT", 2, "ERIC", "BATT", 0) {
     External (_SB.PCI0.ACEL.XSTA, MethodObj)
 
     
-    Method (B1B2, 2, NotSerialized) {
+    Method (B1B2, 2, NotSerialized) 
+    {
         // Bytes to Word
         // e.g. B1B2 (0x3A, 0x03) -> 0x033A
         return ((Arg0 | (Arg1 << 8)))
     }
     
-    Method (W16B, 3, NotSerialized) {
+    Method (W16B, 3, NotSerialized) 
+    {
         // Word to Bytes
         // e.g. W16B (ARG0, ARG1, 0x033A) -> ARG0=0x3A, ARG1=0x03
         Arg0 = Arg2
         Arg1 = (Arg2 >> 8)
     }
 
-    Method (WE1B, 2, NotSerialized) {
+    Method (WE1B, 2, NotSerialized) 
+    {
         // Write 1 byte to EC
         // Arg0: Offset, Arg1: Byte to be written
         OperationRegion(ERM2, EmbeddedControl, Arg0, 1)    //OperationRegion (RegionName, RegionSpace, Offset, Length)
-        Field (ERM2, ByteAcc, NoLock, Preserve) {          // Field (RegionName, AccessType, LockRule, UpdateRule) {FieldUnitList}
+        Field (ERM2, ByteAcc, NoLock, Preserve) 
+        {          
+            // Field (RegionName, AccessType, LockRule, UpdateRule) {FieldUnitList}
             BYTE, 8
         }
         BYTE = Arg1    // Write
     }
-    Method(WECB, 3, Serialized) {
+    
+    Method(WECB, 3, Serialized) 
+    {
         // Write to EC field
         // Arg0: Offset, Arg1: Length, Arg2: Data to be written
         Arg1 = ((Arg1 + 7) >> 3)        // Arg1 = ceil(Arg1 / 8), this is loop counter
@@ -129,9 +136,11 @@ DefinitionBlock ("", "SSDT", 2, "ERIC", "BATT", 0) {
     }
 
     
-    Scope (\_SB.PCI0.LPCB.EC0) {
+    Scope (\_SB.PCI0.LPCB.EC0) 
+    {
         OperationRegion(ERM0, EmbeddedControl, 0, 0xFF)
-        Field(ERM0, ByteAcc, Lock, Preserve) {
+        Field(ERM0, ByteAcc, Lock, Preserve) 
+        {
             Offset(0x72),
             BFC0, 8,    // BFCC
             BFC1, 8,
@@ -143,12 +152,14 @@ DefinitionBlock ("", "SSDT", 2, "ERIC", "BATT", 0) {
             MBC0, 8,    // MBCV
             MBC1, 8
         }
-        Field(ERM0, ByteAcc, NoLock, Preserve) {
+        Field(ERM0, ByteAcc, NoLock, Preserve) 
+        {
             Offset (0x04),
             MW00, 8,
             MW01, 8
         }
-        Method (SMWR, 4, NotSerialized) {
+        Method (SMWR, 4, NotSerialized) 
+        {
             If (_OSI("Darwin"))     // If OS match macOS
             {
                 If (LNot (ECOK))
@@ -245,22 +256,30 @@ DefinitionBlock ("", "SSDT", 2, "ERIC", "BATT", 0) {
                 Release (MUT0)
                 Return (Local0)
             }
-            Else {    // Else call original method
+            Else 
+            {    // Else call original method
                 Return (\_SB.PCI0.LPCB.EC0.XMWR(Arg0, Arg1, Arg2, Arg3))
             }
         }
-        Method (SMRD, 4, NotSerialized) {
+        Method (SMRD, 4, NotSerialized) 
+        {
             If (_OSI("Darwin"))     // If OS match macOS
             {
-                If (LNot (ECOK)) {
+                If (LNot (ECOK)) 
+                {
                     Return (0xFF)
                 }
 
-                If (LNotEqual (Arg0, 0x07)) {
-                    If (LNotEqual (Arg0, 0x09)) {
-                        If (LNotEqual (Arg0, 0x0B)) {
-                            If (LNotEqual (Arg0, 0x47)) {
-                                If (LNotEqual (Arg0, 0xC7)) {
+                If (LNotEqual (Arg0, 0x07)) 
+                {
+                    If (LNotEqual (Arg0, 0x09)) 
+                    {
+                        If (LNotEqual (Arg0, 0x0B)) 
+                        {
+                            If (LNotEqual (Arg0, 0x47)) 
+                            {
+                                If (LNotEqual (Arg0, 0xC7)) 
+                                {
                                     Return (0x19)
                                 }
                             }
@@ -270,16 +289,19 @@ DefinitionBlock ("", "SSDT", 2, "ERIC", "BATT", 0) {
 
                 Acquire (MUT0, 0xFFFF)
                 Store (0x04, Local0)
-                While (LGreater (Local0, One)){
+                While (LGreater (Local0, One))
+                {
                     And (SMST, 0x40, SMST)
                     Store (Arg2, SMCM)
                     Store (Arg1, SMAD)
                     Store (Arg0, SMPR)
                     Store (Zero, Local3)
-                    While (LNot (And (SMST, 0xBF, Local1))){
+                    While (LNot (And (SMST, 0xBF, Local1)))
+                    {
                         Sleep (0x02)
                         Increment (Local3)
-                        If (LEqual (Local3, 0x32)){
+                        If (LEqual (Local3, 0x32))
+                        {
                             And (SMST, 0x40, SMST)
                             Store (Arg2, SMCM)
                             Store (Arg1, SMAD)
@@ -288,55 +310,68 @@ DefinitionBlock ("", "SSDT", 2, "ERIC", "BATT", 0) {
                         }
                     }
 
-                    If (LEqual (Local1, 0x80)){
+                    If (LEqual (Local1, 0x80))
+                    {
                         Store (Zero, Local0)
                     }
-                    Else{
+                    Else
+                    {
                         Decrement (Local0)
                     }
                 }
 
-                If (Local0){
+                If (Local0)
+                {
                     Store (And (Local1, 0x1F), Local0)
                 }
                 Else{
-                    If (LEqual (Arg0, 0x07)){
+                    If (LEqual (Arg0, 0x07))
+                    {
                         Store (SMB0, Arg3)
                     }
 
-                    If (LEqual (Arg0, 0x47)){
+                    If (LEqual (Arg0, 0x47))
+                    {
                         Store (SMB0, Arg3)
                     }
 
-                    If (LEqual (Arg0, 0xC7)){
+                    If (LEqual (Arg0, 0xC7))
+                    {
                         Store (SMB0, Arg3)
                     }
 
-                    If (LEqual (Arg0, 0x09)){
+                    If (LEqual (Arg0, 0x09))
+                    {
                         //Store (SMW0, Arg3)
                         Arg3 = B1B2(MW00, MW01)
                     }
 
-                    If (LEqual (Arg0, 0x0B)){
+                    If (LEqual (Arg0, 0x0B))
+                    {
                         Store (BCNT, Local3)
                         ShiftRight (0x0100, 0x03, Local2)
-                        If (LGreater (Local3, Local2)){
+                        If (LGreater (Local3, Local2))
+                        {
                             Store (Local2, Local3)
                         }
 
-                        If (LLess (Local3, 0x09)){
+                        If (LLess (Local3, 0x09))
+                        {
                             //Store (FLD0, Local2)
                             Local2 = RECB(0x04, 0x40)
                         }
-                        ElseIf (LLess (Local3, 0x11)){
+                        ElseIf (LLess (Local3, 0x11))
+                        {
                             //Store (FLD1, Local2)
                             Local2 = RECB(0x04, 0x80)
                         }
-                        ElseIf (LLess (Local3, 0x19)){
+                        ElseIf (LLess (Local3, 0x19))
+                        {
                             //Store (FLD2, Local2)
                             Local2 = RECB(0x04, 0xC0)
                         }
-                        Else{
+                        Else
+                        {
                             //Store (FLD3, Local2)
                             Local2 = RECB(0x04, 0x100)
                         }
@@ -347,7 +382,8 @@ DefinitionBlock ("", "SSDT", 2, "ERIC", "BATT", 0) {
                         Store (Zero, Local5)
                         Name (OEMS, Buffer (0x46){})
                         ToBuffer (Local2, OEMS)
-                        While (LGreater (Local3, Local5)){
+                        While (LGreater (Local3, Local5))
+                        {
                             GBFE (OEMS, Local5, RefOf (Local6))
                             PBFE (Local4, Local5, Local6)
                             Increment (Local5)
@@ -359,13 +395,14 @@ DefinitionBlock ("", "SSDT", 2, "ERIC", "BATT", 0) {
                 Release (MUT0)
                 Return (Local0)
             }
-            Else {
+            Else 
+            {
                 Return(\_SB.PCI0.LPCB.EC0.XMRD(Arg0, Arg1, Arg2, Arg3))
             }
         }
     }
     
-    Scope(\_SB.PCI0.ACEL) {
+    /*Scope(\_SB.PCI0.ACEL) {
         Method (_STA, 0, NotSerialized) {
             If (_OSI("Darwin")) {
                 Return (0)
@@ -374,14 +411,18 @@ DefinitionBlock ("", "SSDT", 2, "ERIC", "BATT", 0) {
                 Return(\_SB.PCI0.ACEL.XSTA())        // Cause Windows keyboard stop after sleep
             }
         }
-    }
+    }*/
     
     
-    Scope(\_SB.BAT0) {    
-        Method (UPBI, 0, NotSerialized) {
-            If (_OSI("Darwin")) {
+    Scope(\_SB.BAT0) 
+    {    
+        Method (UPBI, 0, NotSerialized) 
+        {
+            If (_OSI("Darwin")) 
+            {
                 Local5 = B1B2(^^PCI0.LPCB.EC0.BFC0, ^^PCI0.LPCB.EC0.BFC1)
-                If (LAnd (Local5, LNot (And (Local5, 0x8000)))) {
+                If (LAnd (Local5, LNot (And (Local5, 0x8000)))) 
+                {
                     ShiftRight (Local5, 0x05, Local5)
                     ShiftLeft (Local5, 0x05, Local5)
                     Store (Local5, Index (PBIF, One))
@@ -396,7 +437,8 @@ DefinitionBlock ("", "SSDT", 2, "ERIC", "BATT", 0) {
                     Add (Local4, 0x02, FABL)
                 }
 
-                If (^^PCI0.LPCB.EC0.MBNH) {
+                If (^^PCI0.LPCB.EC0.MBNH) 
+                {
                     Store (^^PCI0.LPCB.EC0.BVLB, Local0)
                     Store (^^PCI0.LPCB.EC0.BVHB, Local1)
                     ShiftLeft (Local1, 0x08, Local1)
@@ -404,7 +446,9 @@ DefinitionBlock ("", "SSDT", 2, "ERIC", "BATT", 0) {
                     Store (Local0, Index (PBIF, 0x04))
                     Store ("OANI$", Index (PBIF, 0x09))
                     Store ("NiMH", Index (PBIF, 0x0B))
-                } Else {
+                } 
+                Else 
+                {
                     Store (^^PCI0.LPCB.EC0.BVLB, Local0)
                     Store (^^PCI0.LPCB.EC0.BVHB, Local1)
                     ShiftLeft (Local1, 0x08, Local1)
@@ -417,13 +461,16 @@ DefinitionBlock ("", "SSDT", 2, "ERIC", "BATT", 0) {
                 Store ("Primary", Index (PBIF, 0x09))
                 UPUM ()
                 Store (One, Index (PBIF, Zero))
-            } Else {
+            } 
+            Else 
+            {
                 \_SB.BAT0.XPBI()
             }
         }
         Method (UPBS, 0, NotSerialized)
         {
-            If (_OSI("Darwin")) {
+            If (_OSI("Darwin")) 
+            {
                 Store (B1B2(^^PCI0.LPCB.EC0.MCU0, ^^PCI0.LPCB.EC0.MCU1), Local0)
                 If (And (Local0, 0x8000))
                 {
@@ -463,7 +510,8 @@ DefinitionBlock ("", "SSDT", 2, "ERIC", "BATT", 0) {
                 Store (B1B2(^^PCI0.LPCB.EC0.MBC0, ^^PCI0.LPCB.EC0.MBC1), Index (PBST, 0x03))
                 Store (^^PCI0.LPCB.EC0.MBST, Index (PBST, Zero))
             }
-            Else {
+            Else 
+            {
                 \_SB.BAT0.XPBS()
             }
         }
