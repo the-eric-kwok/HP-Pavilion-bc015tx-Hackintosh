@@ -156,6 +156,13 @@ Old:
 
 你可以在 config.plist 的 Misc -> Boot -> PickerVariant 中切换。
 
+如果需要其他主题的话，请参考：
+
+[Dortina 教程](https://dortania.github.io/OpenCore-Post-Install/cosmetic/gui.html)
+[LuckyCrack/OpenCore-Themes](https://github.com/LuckyCrack/OpenCore-Themes)
+[chris1111/My-Simple-OC-Themes](https://github.com/chris1111/My-Simple-OC-Themes)
+[LAbyOne/OpenCore-Themes-Downloader](https://github.com/LAbyOne/OpenCore-Themes-Downloader)
+
 
 
 ## 关于 ACEL 设备
