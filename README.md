@@ -105,6 +105,10 @@ Language:
 14. 交换了左侧的 Windows（现为⌘）和 Alt（现为⌥）键，右侧 Alt 依旧作为 ⌘ 键，方便使用删除文件快捷键（SSDT-SwapCmdOpt.dsl）
 
 
+## 支持的 OS 版本
+只在 macOS Catalina 和 macOS Big Sur 上测试过，更低版本的 macOS 未经测试，不保证可用性。
+（当前我停留在了 Catalina，暂时没有更换 Big Sur 的打算，所以可能有一些兼容问题无法解决，请见谅）
+
 
 ## 关于 1820A
 
@@ -114,7 +118,6 @@ Language:
 - BrcmFirmwareData.kext
 - BrcmPatchRAM3.kext
 - AirportBrcmFixup.kext
-
 
 
 ## BIOS设置
@@ -152,6 +155,84 @@ Old:
 
 
 你可以在 config.plist 的 Misc -> Boot -> PickerVariant 中切换。
+
+
+
+## 关于 ACEL 设备
+这是一个惠普 HP 笔记本特有的设备，是加速度传感器，通常提供硬盘的跌落保护，然而在其 ADJT 方法中有一处错误的 SMWR 调用，导致在 MacOS 下 EC 读写异常，进而出现电量不更新、无法充电、显示为电池未在充电、开机提示“非 HP 电池”等问题，并且此问题出现后在 Windows 中也同样会出现。
+
+我们可以尝试通过禁止 ACEL 设备或修正 ADJT 内部调用顺序的方式进行修复。
+
+源代码：
+```
+Method (ADJT, 0, Serialized)
+{
+    If (_STA ())
+    {
+        If (LEqual (^^LPCB.EC0.ECOK, One))
+        {
+            Store (^^LPCB.EC0.SW2S, Local0)
+        }
+        Else
+        {
+            Store (PWRS, Local0)
+        }
+
+        If (LAnd (LEqual (^^^LID0._LID (), Zero), LEqual (Local0, Zero)))
+        {
+            If (LNotEqual (CNST, One))
+            {
+                Store (One, CNST)
+                Store (Zero, ^^LPCB.EC0.PLGS)
+                ^^LPCB.EC0.SMWR (0xC6, 0x50, 0x24, Zero)
+                Sleep (0x0BB8)
+                ^^LPCB.EC0.SMWR (0xC6, 0x50, 0x36, 0x14)
+                ^^LPCB.EC0.SMWR (0xC6, 0x50, 0x37, 0x10)
+                ^^LPCB.EC0.SMWR (0xC6, 0x50, 0x34, 0x2A)
+                ^^LPCB.EC0.SMWR (0xC6, 0x50, 0x22, 0x20)
+            }
+        }
+        ElseIf (LNotEqual (CNST, Zero))
+        {
+            Store (Zero, CNST)
+            ^^LPCB.EC0.SMWR (0xC6, 0x50, 0x22, 0x40)  // <------
+            ^^LPCB.EC0.SMWR (0xC6, 0x50, 0x36, One)
+            ^^LPCB.EC0.SMWR (0xC6, 0x50, 0x37, 0x50)
+            ^^LPCB.EC0.SMWR (0xC6, 0x50, 0x34, 0x7F)
+            ^^LPCB.EC0.SMWR (0xC6, 0x50, 0x24, 0x02)
+            Store (One, ^^LPCB.EC0.PLGS)
+        }
+    }
+}
+```
+将箭头指向的语句放到末尾即可
+
+修改后：
+```
+        ...
+        ElseIf (LNotEqual (CNST, Zero))
+        {
+            Store (Zero, CNST)
+            ^^LPCB.EC0.SMWR (0xC6, 0x50, 0x36, One)
+            ^^LPCB.EC0.SMWR (0xC6, 0x50, 0x37, 0x50)
+            ^^LPCB.EC0.SMWR (0xC6, 0x50, 0x34, 0x7F)
+            ^^LPCB.EC0.SMWR (0xC6, 0x50, 0x24, 0x02)
+            Store (One, ^^LPCB.EC0.PLGS)
+            ^^LPCB.EC0.SMWR (0xC6, 0x50, 0x22, 0x40)  // <------
+        }
+        ...
+```
+
+**修改之后需要长按电源键十秒钟来重置 EC，之后正常进入系统即可恢复！**
+
+本 repo 中使用直接禁用 ACEL 设备的方式解决，如果在你的 HP 本子上禁用 ACEL 仍未解决，可参照上文方法修改 ADJT 方法并在 SSDT-BATT 中删除 \_STA 方法，以及在 config 文件中删除 `\[BATT\] Rename ACEL.\_STA to XSTA` 这个重命名补丁；然后将修改后的 ADJT 方法放入 SSDT-BATT.aml 中加载，并在 config 文件的 ACPI -> Patch 中加上：
+```
+Comment: [BATT] Rename ADJT to XDJT
+Find:    4143454C 08
+Replace: 5843454C 08
+```
+
+
 
 ## 链接
 
