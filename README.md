@@ -38,7 +38,7 @@ Language:
 
 ## 如何使用
 
-1. 在 [Release ](https://github.com/the-eric-kwok/HP-Pavilion-bc015tx-Hackintosh/releases/latest)中下载最新版本的 EFI
+1. 在 [GitHub 发行版](https://github.com/the-eric-kwok/HP-Pavilion-bc015tx-Hackintosh/releases/latest) 或 [Gitee 发行版](https://gitee.com/erickwok404/HP-Pavilion-bc015tx-Hackintosh/releases)中下载最新版本的 EFI
 
 2. 如果你是在 Windows 下：
 

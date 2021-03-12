@@ -31,7 +31,7 @@
 
 ## Usage
 
-1. Download latest EFI in [Release Page](https://github.com/the-eric-kwok/HP-Pavilion-bc015tx-Hackintosh/releases/latest)
+1. Download latest EFI in [GitHub Release Page](https://github.com/the-eric-kwok/HP-Pavilion-bc015tx-Hackintosh/releases/latest) or [Gitee Release Page](https://gitee.com/erickwok404/HP-Pavilion-bc015tx-Hackintosh/releases)
 
 2. If you are under Windows:
 
