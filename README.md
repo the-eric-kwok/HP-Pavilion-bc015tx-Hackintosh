@@ -158,137 +158,206 @@ Old:
 
 如果需要其他主题的话，请参考：
 
-[Dortina 教程](https://dortania.github.io/OpenCore-Post-Install/cosmetic/gui.html)
-[LuckyCrack/OpenCore-Themes](https://github.com/LuckyCrack/OpenCore-Themes)
-[chris1111/My-Simple-OC-Themes](https://github.com/chris1111/My-Simple-OC-Themes)
-[LAbyOne/OpenCore-Themes-Downloader](https://github.com/LAbyOne/OpenCore-Themes-Downloader)
+- [Dortina 教程](https://dortania.github.io/OpenCore-Post-Install/cosmetic/gui.html)
+- [LuckyCrack/OpenCore-Themes](https://github.com/LuckyCrack/OpenCore-Themes)
+- [chris1111/My-Simple-OC-Themes](https://github.com/chris1111/My-Simple-OC-Themes)
+- [LAbyOne/OpenCore-Themes-Downloader](https://github.com/LAbyOne/OpenCore-Themes-Downloader)
 
 
+## 常见问题
 
-## 如果你的电池电量不更新 / 无法充电 / 开机时提示“非 HP 电池“
+### 如果你的电池电量不更新 / 无法充电 / 开机时提示“非 HP 电池“
 ACEL 设备是一个惠普 HP 笔记本特有的设备，是加速度传感器，通常提供硬盘的跌落保护，然而在其 ADJT 方法中有一处错误的 SMWR 调用，导致在 MacOS 下 EC 读写异常，进而出现电量不更新、无法充电、显示为电池未在充电、开机提示“非 HP 电池”等问题，并且此问题出现后在 Windows 中也同样会出现。
 
-我们可以尝试通过禁止 ACEL 设备或修正 ADJT 内部调用顺序的方式进行修复。
+此问题有两种修复方法：
 
-源代码：
-```
-Method (ADJT, 0, Serialized)
-{
-    If (_STA ())
+1. 禁止 ACEL 设备
+
+    我们可以把 ACEL 设备的 \_STA 方法重命名为 XSTA，然后在我们的 SSDT 中添加一个 \_STA 方法来替换它
+    
+    **你需要自行使用 HexFiend 来寻找正确的二进制补丁。记得要延展你找到的补丁，以确保它在整个 DSDT 中是唯一的（因为 DSDT 中有很多个设备，每个设备都有一个 \_STA 方法）**
+    
+    示例的 \_STA 代码：
+    ```
+    Scope (\_SB.PCI0.ACEL)
     {
-        If (LEqual (^^LPCB.EC0.ECOK, One))
+        Method (_STA, 0, NotSerialized) 
         {
-            Store (^^LPCB.EC0.SW2S, Local0)
-        }
-        Else
-        {
-            Store (PWRS, Local0)
-        }
-
-        If (LAnd (LEqual (^^^LID0._LID (), Zero), LEqual (Local0, Zero)))
-        {
-            If (LNotEqual (CNST, One))
+            If (_OSI("Darwin")) 
             {
-                Store (One, CNST)
-                Store (Zero, ^^LPCB.EC0.PLGS)
-                ^^LPCB.EC0.SMWR (0xC6, 0x50, 0x24, Zero)
-                Sleep (0x0BB8)
-                ^^LPCB.EC0.SMWR (0xC6, 0x50, 0x36, 0x14)
-                ^^LPCB.EC0.SMWR (0xC6, 0x50, 0x37, 0x10)
-                ^^LPCB.EC0.SMWR (0xC6, 0x50, 0x34, 0x2A)
-                ^^LPCB.EC0.SMWR (0xC6, 0x50, 0x22, 0x20)
+                Return (0)
+            }
+            Else 
+            {
+                Return(XSTA())
             }
         }
-        ElseIf (LNotEqual (CNST, Zero))
+    }
+    ```
+
+2. 修正 ADJT 内部调用顺序
+
+    我们可以把 ADJT 方法重命名为 XDJT，并且在我们的 DSDT 中添加一个 ADJT 方法来替换它
+
+    更名补丁：
+
+    ```
+    Comment: [BATT] Rename ADJT to XDJT
+    Find:    4143454C 08
+    Replace: 5843454C 08
+    ```
+
+    未修改的代码：
+    
+    ```
+    Scope (\_SB.PCI0.ACEL)
+    {
+        Method (ADJT, 0, Serialized)
         {
-            Store (Zero, CNST)
-            ^^LPCB.EC0.SMWR (0xC6, 0x50, 0x22, 0x40)  // <------
-            ^^LPCB.EC0.SMWR (0xC6, 0x50, 0x36, One)
-            ^^LPCB.EC0.SMWR (0xC6, 0x50, 0x37, 0x50)
-            ^^LPCB.EC0.SMWR (0xC6, 0x50, 0x34, 0x7F)
-            ^^LPCB.EC0.SMWR (0xC6, 0x50, 0x24, 0x02)
-            Store (One, ^^LPCB.EC0.PLGS)
+            If (_STA ())
+            {
+                If (LEqual (^^LPCB.EC0.ECOK, One))
+                {
+                    Store (^^LPCB.EC0.SW2S, Local0)
+                }
+                Else
+                {
+                    Store (PWRS, Local0)
+                }
+
+                If (LAnd (LEqual (^^^LID0._LID (), Zero), LEqual (Local0, Zero)))
+                {
+                    If (LNotEqual (CNST, One))
+                    {
+                        Store (One, CNST)
+                        Store (Zero, ^^LPCB.EC0.PLGS)
+                        ^^LPCB.EC0.SMWR (0xC6, 0x50, 0x24, Zero)
+                        Sleep (0x0BB8)
+                        ^^LPCB.EC0.SMWR (0xC6, 0x50, 0x36, 0x14)
+                        ^^LPCB.EC0.SMWR (0xC6, 0x50, 0x37, 0x10)
+                        ^^LPCB.EC0.SMWR (0xC6, 0x50, 0x34, 0x2A)
+                        ^^LPCB.EC0.SMWR (0xC6, 0x50, 0x22, 0x20)
+                    }
+                }
+                ElseIf (LNotEqual (CNST, Zero))
+                {
+                    Store (Zero, CNST)
+                    ^^LPCB.EC0.SMWR (0xC6, 0x50, 0x22, 0x40)  // <------
+                    ^^LPCB.EC0.SMWR (0xC6, 0x50, 0x36, One)
+                    ^^LPCB.EC0.SMWR (0xC6, 0x50, 0x37, 0x50)
+                    ^^LPCB.EC0.SMWR (0xC6, 0x50, 0x34, 0x7F)
+                    ^^LPCB.EC0.SMWR (0xC6, 0x50, 0x24, 0x02)
+                    Store (One, ^^LPCB.EC0.PLGS)
+                }
+            }
         }
     }
-}
-```
-将箭头指向的语句放到末尾即可
+    ```
+    
+    将箭头指向的语句放到末尾即可
 
-修改后：
-```
-        ...
-        ElseIf (LNotEqual (CNST, Zero))
+    修改后的代码：
+    
+    ```
+    Scope (\_SB.PCI0.ACEL)
+    {
+        Method (ADJT, 0, Serialized)
         {
-            Store (Zero, CNST)
-            ^^LPCB.EC0.SMWR (0xC6, 0x50, 0x36, One)
-            ^^LPCB.EC0.SMWR (0xC6, 0x50, 0x37, 0x50)
-            ^^LPCB.EC0.SMWR (0xC6, 0x50, 0x34, 0x7F)
-            ^^LPCB.EC0.SMWR (0xC6, 0x50, 0x24, 0x02)
-            Store (One, ^^LPCB.EC0.PLGS)
-            ^^LPCB.EC0.SMWR (0xC6, 0x50, 0x22, 0x40)  // <------
+            If (_STA ())
+            {
+                If (LEqual (^^LPCB.EC0.ECOK, One))
+                {
+                    Store (^^LPCB.EC0.SW2S, Local0)
+                }
+                Else
+                {
+                    Store (PWRS, Local0)
+                }
+
+                If (LAnd (LEqual (^^^LID0._LID (), Zero), LEqual (Local0, Zero)))
+                {
+                    If (LNotEqual (CNST, One))
+                    {
+                        Store (One, CNST)
+                        Store (Zero, ^^LPCB.EC0.PLGS)
+                        ^^LPCB.EC0.SMWR (0xC6, 0x50, 0x24, Zero)
+                        Sleep (0x0BB8)
+                        ^^LPCB.EC0.SMWR (0xC6, 0x50, 0x36, 0x14)
+                        ^^LPCB.EC0.SMWR (0xC6, 0x50, 0x37, 0x10)
+                        ^^LPCB.EC0.SMWR (0xC6, 0x50, 0x34, 0x2A)
+                        ^^LPCB.EC0.SMWR (0xC6, 0x50, 0x22, 0x20)
+                    }
+                }
+                ElseIf (LNotEqual (CNST, Zero))
+                {
+                    Store (Zero, CNST)
+                    ^^LPCB.EC0.SMWR (0xC6, 0x50, 0x36, One)
+                    ^^LPCB.EC0.SMWR (0xC6, 0x50, 0x37, 0x50)
+                    ^^LPCB.EC0.SMWR (0xC6, 0x50, 0x34, 0x7F)
+                    ^^LPCB.EC0.SMWR (0xC6, 0x50, 0x24, 0x02)
+                    Store (One, ^^LPCB.EC0.PLGS)
+                    ^^LPCB.EC0.SMWR (0xC6, 0x50, 0x22, 0x40)  // <------
+                }
+            }
         }
-        ...
-```
+    }
+    ```
 
 **修改之后需要长按电源键十秒钟来重置 EC，之后正常进入系统即可恢复！**
 
-本 repo 中使用直接禁用 ACEL 设备的方式解决，如果在你的 HP 本子上禁用 ACEL 仍未解决，可参照上文方法修改 ADJT 方法并在 SSDT-BATT 中删除 \_STA 方法，以及在 config 文件中删除 `\[BATT\] Rename ACEL.\_STA to XSTA` 这个重命名补丁；然后将修改后的 ADJT 方法放入 SSDT-BATT.aml 中加载，并在 config 文件的 ACPI -> Patch 中加上：
-```
-Comment: [BATT] Rename ADJT to XDJT
-Find:    4143454C 08
-Replace: 5843454C 08
-```
 
+### 如果你的电量百分比 macOS 与 Windows 下有偏差
+    检查你的 DSDT 的 \_BST 方法，看看其中是否包含了这几行
 
-## 如果你的电量百分比 macOS 与 Windows 下有偏差
-检查你的 DSDT 的 \_BST 方法，看看其中是否包含了这几行
-
-```
-If (LEqual (BRTE, Zero))
-{
-    Store (0xFFFFFFFF, Index (PBST, One))
-}
-```
-
-如果是的话把 \_BST 方法放到 SSDT-BATT.aml 中，并且将 SSDT-BATT.aml 中的 \_BST 方法中的这几行删掉，如：
-
-```
-Method (_BST, 0, NotSerialized)  // _BST: Battery Status
-{
-    If (LEqual (^^PCI0.LPCB.EC0.ECOK, One))
+    ```
+    If (LEqual (BRTE, Zero))
     {
-        If (^^PCI0.LPCB.EC0.MBTS)
+        Store (0xFFFFFFFF, Index (PBST, One))
+    }
+    ```
+
+    如果是的话把以下 \_BST 方法放到 SSDT-BATT 中：
+
+    ```
+    Scope (\_SB.BAT0)
+    {
+        Method (_BST, 0, NotSerialized)  // _BST: Battery Status
         {
-            UPBS ()
-        }
-        Else
-        {
-            IVBS ()
+            If (LEqual (^^PCI0.LPCB.EC0.ECOK, One))
+            {
+                If (^^PCI0.LPCB.EC0.MBTS)
+                {
+                    UPBS ()
+                }
+                Else
+                {
+                    IVBS ()
+                }
+            }
+            Else
+            {
+                IVBS ()
+            }
+
+            //If (LEqual (BRTE, Zero))  //注释掉这几行
+            //{
+            //    Store (0xFFFFFFFF, Index (PBST, One))
+            //}
+
+            Return (PBST)
         }
     }
-    Else
-    {
-        IVBS ()
-    }
+    ```
 
-    //If (LEqual (BRTE, Zero))  //注释掉这几行
-    //{
-    //    Store (0xFFFFFFFF, Index (PBST, One))
-    //}
+    然后重新编译 SSDT-BATT.aml，并且在 config 文件中 ACPI -> Patch 加上：
 
-    Return (PBST)
-}
-```
+    ```
+    Comment: Rename _BST to XBST
+    Find:    5F425354 00
+    Replace: 58425354 00
+    ```
 
-然后重新编译 SSDT-BATT.aml，并且在 config 文件中 ACPI -> Patch 加上：
-
-```
-Comment: Rename _BST to XBST
-Find:    5F425354 00
-Replace: 58425354 00
-```
-
-重启即可
+    重启即可
 
 
 
@@ -305,6 +374,8 @@ Replace: 58425354 00
 ## 打赏
 
 ![donation](img/donate.png)
+
+[Or donate with PayPal](https://paypal.me/theerickwok)
 
 
 
