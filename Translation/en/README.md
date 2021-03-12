@@ -17,7 +17,7 @@
 
 ## Usage
 
-1. Download latest EFI in [Release ](https://github.com/the-eric-kwok/HP-Pavilion-bc015tx-Hackintosh/releases/latest)
+1. Download latest EFI in [Release Page](https://github.com/the-eric-kwok/HP-Pavilion-bc015tx-Hackintosh/releases/latest)
 
 2. If you are under Windows:
 
@@ -98,6 +98,10 @@ Submit an [issue](https://github.com/the-eric-kwok/HP-Pavilion-bc015tx-Hackintos
 14. Switch between left Windows (now is ⌘) and Alt (now is ⌥ ). Right Alt remains as ⌘, so the `⌘Del` is more convincing (by SSDT-SwapCmdOpt.dsl)
 
 
+## Supported OS version
+
+Only tested on Catalina and Big Sur.
+
 
 ## About 1820A
 
@@ -147,43 +151,204 @@ Old:
 You can select between them inside your config.plist: Misc -> Boot -> PickerVariant
 
 
+For other themes, see:
+- [Dortina Guide](https://dortania.github.io/OpenCore-Post-Install/cosmetic/gui.html)
+- [LuckyCrack/OpenCore-Themes](https://github.com/LuckyCrack/OpenCore-Themes)
+- [chris1111/My-Simple-OC-Themes](https://github.com/chris1111/My-Simple-OC-Themes)
+- [LAbyOne/OpenCore-Themes-Downloader](https://github.com/LAbyOne/OpenCore-Themes-Downloader)
 
-## ⚠️Warning⚠️
+## Common issues
 
-Don't download kext inside kexts folder, you should download the latest version of them instead. 
+### If your battery percentage won't update / won't charge
+ACEL device is an accelerate sensor which provides falling protection for hard disk. But in its ADJT method there is a wrong SMWR calling, and causing Embedding Controller read/write failed under macOS. So that there will be problems such as battery percentage won't update, or battery won't charge, and these problems will occur under Windows once it happened in macOS.
 
-You should compile the dsl file under SSDT before putting them to ACPI, using iASL or MaciASL or AIDA64 Enginear.
+There are two ways to fix this:
 
-```
-# in the terminal
-iasl SSDT-xxx.dsl
+1. Disable ACEL
+   
+    We can rename \_STA method in ACEL to XSTA, and place a new \_STA method in our SSDT to replace it:
+    
+    **This way you should look for the binary patch with HexFiend by yourself. Remember to extend the binary string to make it unique in DSDT (because there are many many devices inside your DSDT, and each device has a \_STA method)**
+    
+    Example \_STA code:
+    ```
+    Scope (\_SB.PCI0.ACEL)
+    {
+        Method (_STA, 0, NotSerialized) 
+        {
+            If (_OSI("Darwin")) 
+            {
+                Return (0)
+            }
+            Else 
+            {
+                Return(XSTA())
+            }
+        }
+    }
+    ```
+   
+2. Fix ADJT
 
-# Windows will be like this
-# C:\User\Someone\Downloads\iasl.exe SSDT=xxx.dsl
-```
+    We can rename ADJT method to XDJT, and place a new ADJT method in our SSDT to replace it. 
+    
+    Rename patch:
+    
+    ```
+    Comment: [BATT] Rename ADJT to XDJT
+    Find:    4143454C 08
+    Replace: 5843454C 08
+    ```
 
-Update:
+    Original code:
+    
+    ```
+    Scope (\_SB.PCI0.ACEL)
+    {
+        Method (ADJT, 0, Serialized)
+        {
+            If (_STA ())
+            {
+                If (LEqual (^^LPCB.EC0.ECOK, One))
+                {
+                    Store (^^LPCB.EC0.SW2S, Local0)
+                }
+                Else
+                {
+                    Store (PWRS, Local0)
+                }
 
-Added SSDT-aml. If you are not familiar with compile or you can't do that compile thing you could add some patch from SSDT-aml. **But you should hotpatch original DSDT according comments in the dsl !**
+                If (LAnd (LEqual (^^^LID0._LID (), Zero), LEqual (Local0, Zero)))
+                {
+                    If (LNotEqual (CNST, One))
+                    {
+                        Store (One, CNST)
+                        Store (Zero, ^^LPCB.EC0.PLGS)
+                        ^^LPCB.EC0.SMWR (0xC6, 0x50, 0x24, Zero)
+                        Sleep (0x0BB8)
+                        ^^LPCB.EC0.SMWR (0xC6, 0x50, 0x36, 0x14)
+                        ^^LPCB.EC0.SMWR (0xC6, 0x50, 0x37, 0x10)
+                        ^^LPCB.EC0.SMWR (0xC6, 0x50, 0x34, 0x2A)
+                        ^^LPCB.EC0.SMWR (0xC6, 0x50, 0x22, 0x20)
+                    }
+                }
+                ElseIf (LNotEqual (CNST, Zero))
+                {
+                    Store (Zero, CNST)
+                    ^^LPCB.EC0.SMWR (0xC6, 0x50, 0x22, 0x40)  // <------
+                    ^^LPCB.EC0.SMWR (0xC6, 0x50, 0x36, One)
+                    ^^LPCB.EC0.SMWR (0xC6, 0x50, 0x37, 0x50)
+                    ^^LPCB.EC0.SMWR (0xC6, 0x50, 0x34, 0x7F)
+                    ^^LPCB.EC0.SMWR (0xC6, 0x50, 0x24, 0x02)
+                    Store (One, ^^LPCB.EC0.PLGS)
+                }
+            }
+        }
+    }
+    ```
 
+    Move the pointed line to the buttom
 
+    Modified code:
+    
+    ```
+    Scope (\_SB.PCI0.ACEL)
+    {
+        Method (ADJT, 0, Serialized)
+        {
+            If (_STA ())
+            {
+                If (LEqual (^^LPCB.EC0.ECOK, One))
+                {
+                    Store (^^LPCB.EC0.SW2S, Local0)
+                }
+                Else
+                {
+                    Store (PWRS, Local0)
+                }
 
-Needed SSDT：
+                If (LAnd (LEqual (^^^LID0._LID (), Zero), LEqual (Local0, Zero)))
+                {
+                    If (LNotEqual (CNST, One))
+                    {
+                        Store (One, CNST)
+                        Store (Zero, ^^LPCB.EC0.PLGS)
+                        ^^LPCB.EC0.SMWR (0xC6, 0x50, 0x24, Zero)
+                        Sleep (0x0BB8)
+                        ^^LPCB.EC0.SMWR (0xC6, 0x50, 0x36, 0x14)
+                        ^^LPCB.EC0.SMWR (0xC6, 0x50, 0x37, 0x10)
+                        ^^LPCB.EC0.SMWR (0xC6, 0x50, 0x34, 0x2A)
+                        ^^LPCB.EC0.SMWR (0xC6, 0x50, 0x22, 0x20)
+                    }
+                }
+                ElseIf (LNotEqual (CNST, Zero))
+                {
+                    Store (Zero, CNST)
+                    ^^LPCB.EC0.SMWR (0xC6, 0x50, 0x36, One)
+                    ^^LPCB.EC0.SMWR (0xC6, 0x50, 0x37, 0x50)
+                    ^^LPCB.EC0.SMWR (0xC6, 0x50, 0x34, 0x7F)
+                    ^^LPCB.EC0.SMWR (0xC6, 0x50, 0x24, 0x02)
+                    Store (One, ^^LPCB.EC0.PLGS)
+                    ^^LPCB.EC0.SMWR (0xC6, 0x50, 0x22, 0x40)  // <------
+                }
+            }
+        }
+    }
+    ```
+    
+**After fixed, press down power button for longer then 10s to reset EC, and then boot up, you will see the fix works.**
 
-- SSDT-EC-USBX
-- SSDT-NDGP_OFF
-- SSDT-PLUG-_PR.CPU0
-- SSDT-PNLF-SKL_KBL
-- SSDT-SBUS
-- ~~SSDT-ALS0~~ Merged into SSDT-AddDev
+### If your battery percentage is not accurate
 
-Check [OC-Little](https://github.com/daliansky/OC-little/) for more patching guide
+    Check the \_BST method in your DSDT and see whether it includes these lines:
+    
+    ```
+    If (LEqual (BRTE, Zero))
+    {
+        Store (0xFFFFFFFF, Index (PBST, One))
+    }
+    ```
+    
+    If so, place \_BST method below to SSDT-BATT and apply the rename patch:
+    
+    ```
+    Method (_BST, 0, NotSerialized)  // _BST: Battery Status
+    {
+        If (LEqual (^^PCI0.LPCB.EC0.ECOK, One))
+        {
+            If (^^PCI0.LPCB.EC0.MBTS)
+            {
+                UPBS ()
+            }
+            Else
+            {
+                IVBS ()
+            }
+        }
+        Else
+        {
+            IVBS ()
+        }
 
+        //If (LEqual (BRTE, Zero))  //Comment out these 3 lines
+        //{
+        //    Store (0xFFFFFFFF, Index (PBST, One))
+        //}
 
+        Return (PBST)
+    }
+    ```
+    
+    Rename patch:
+    
+    ```
+    Comment: Rename _BST to XBST
+    Find:    5F425354 00
+    Replace: 58425354 00
+    ```
+    
+    And reboot to fix.
 
-**BTW, SSDT-BATT and SSDT-Battery has the same function, they both patch for the battery percentage. Use ONE of them only.**
-
-**Set `csr-active-config` under OC-config.plist - NVRAM to `00000000` if you are fresh installing.**
 
 ## Links
 
@@ -193,6 +358,9 @@ Check [OC-Little](https://github.com/daliansky/OC-little/) for more patching gui
 
 [OC-Little](https://github.com/daliansky/OC-little/)
 
+
+## Donation
+With [PayPal](https://paypal.me/theerickwok)
 
 
 ## Catalog
