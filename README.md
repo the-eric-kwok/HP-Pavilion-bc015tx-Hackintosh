@@ -212,7 +212,7 @@ ACEL 设备是一个惠普 HP 笔记本特有的设备，是加速度传感器�
     **你需要自行使用 HexFiend 来寻找正确的二进制补丁。记得要延展你找到的补丁，以确保它在整个 DSDT 中是唯一的（因为 DSDT 中有很多个设备，每个设备都有一个 \_STA 方法）**
     
     示例的 \_STA 代码：
-    ```
+    ```assembly
     Scope (\_SB.PCI0.ACEL)
     {
         Method (_STA, 0, NotSerialized) 
@@ -243,7 +243,7 @@ ACEL 设备是一个惠普 HP 笔记本特有的设备，是加速度传感器�
 
     未修改的代码：
     
-    ```
+    ```assembly
     Scope (\_SB.PCI0.ACEL)
     {
         Method (ADJT, 0, Serialized)
@@ -292,7 +292,7 @@ ACEL 设备是一个惠普 HP 笔记本特有的设备，是加速度传感器�
 
     修改后的代码：
     
-    ```
+    ```assembly
     Scope (\_SB.PCI0.ACEL)
     {
         Method (ADJT, 0, Serialized)
@@ -343,7 +343,7 @@ ACEL 设备是一个惠普 HP 笔记本特有的设备，是加速度传感器�
 ### 如果你的电量百分比 macOS 与 Windows 下有偏差
 检查你的 DSDT 的 \_BST 方法，看看其中是否包含了这几行
 
-```
+```assembly
 If (LEqual (BRTE, Zero))
 {
     Store (0xFFFFFFFF, Index (PBST, One))
@@ -352,7 +352,7 @@ If (LEqual (BRTE, Zero))
 
 如果是的话把以下 \_BST 方法放到 SSDT-BATT 中：
 
-```
+```assembly
 Scope (\_SB.BAT0)
 {
     Method (_BST, 0, NotSerialized)  // _BST: Battery Status

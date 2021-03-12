@@ -197,7 +197,7 @@ There are two ways to fix this:
     **This way you should look for the binary patch with HexFiend by yourself. Remember to extend the binary string to make it unique in DSDT (because there are many many devices inside your DSDT, and each device has a \_STA method)**
     
     Example \_STA code:
-    ```
+    ```assembly
     Scope (\_SB.PCI0.ACEL)
     {
         Method (_STA, 0, NotSerialized) 
@@ -228,7 +228,7 @@ There are two ways to fix this:
 
     Original code:
     
-    ```
+    ```assembly
     Scope (\_SB.PCI0.ACEL)
     {
         Method (ADJT, 0, Serialized)
@@ -277,7 +277,7 @@ There are two ways to fix this:
 
     Modified code:
     
-    ```
+    ```assembly
     Scope (\_SB.PCI0.ACEL)
     {
         Method (ADJT, 0, Serialized)
@@ -329,7 +329,7 @@ There are two ways to fix this:
 
 Check the \_BST method in your DSDT and see whether it includes these lines:
 
-```
+```assembly
 If (LEqual (BRTE, Zero))
 {
     Store (0xFFFFFFFF, Index (PBST, One))
@@ -338,7 +338,7 @@ If (LEqual (BRTE, Zero))
 
 If so, place \_BST method below to SSDT-BATT and apply the rename patch:
 
-```
+```assembly
 Method (_BST, 0, NotSerialized)  // _BST: Battery Status
 {
     If (LEqual (^^PCI0.LPCB.EC0.ECOK, One))
