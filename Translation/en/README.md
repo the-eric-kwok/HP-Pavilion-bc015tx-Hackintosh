@@ -327,54 +327,54 @@ There are two ways to fix this:
 
 ### If your battery percentage is not accurate
 
-    Check the \_BST method in your DSDT and see whether it includes these lines:
-    
-    ```
-    If (LEqual (BRTE, Zero))
+Check the \_BST method in your DSDT and see whether it includes these lines:
+
+```
+If (LEqual (BRTE, Zero))
+{
+    Store (0xFFFFFFFF, Index (PBST, One))
+}
+```
+
+If so, place \_BST method below to SSDT-BATT and apply the rename patch:
+
+```
+Method (_BST, 0, NotSerialized)  // _BST: Battery Status
+{
+    If (LEqual (^^PCI0.LPCB.EC0.ECOK, One))
     {
-        Store (0xFFFFFFFF, Index (PBST, One))
-    }
-    ```
-    
-    If so, place \_BST method below to SSDT-BATT and apply the rename patch:
-    
-    ```
-    Method (_BST, 0, NotSerialized)  // _BST: Battery Status
-    {
-        If (LEqual (^^PCI0.LPCB.EC0.ECOK, One))
+        If (^^PCI0.LPCB.EC0.MBTS)
         {
-            If (^^PCI0.LPCB.EC0.MBTS)
-            {
-                UPBS ()
-            }
-            Else
-            {
-                IVBS ()
-            }
+            UPBS ()
         }
         Else
         {
             IVBS ()
         }
-    
-        //If (LEqual (BRTE, Zero))  //Comment out these 3 lines
-        //{
-        //    Store (0xFFFFFFFF, Index (PBST, One))
-        //}
-    
-        Return (PBST)
     }
-    ```
-    
-    Rename patch:
-    
-    ```
-    Comment: Rename _BST to XBST
-    Find:    5F425354 00
-    Replace: 58425354 00
-    ```
-    
-    And reboot to fix.
+    Else
+    {
+        IVBS ()
+    }
+
+    //If (LEqual (BRTE, Zero))  //Comment out these 3 lines
+    //{
+    //    Store (0xFFFFFFFF, Index (PBST, One))
+    //}
+
+    Return (PBST)
+}
+```
+
+Rename patch:
+
+```
+Comment: Rename _BST to XBST
+Find:    5F425354 00
+Replace: 58425354 00
+```
+
+And reboot to fix.
 
 
 ## Links
