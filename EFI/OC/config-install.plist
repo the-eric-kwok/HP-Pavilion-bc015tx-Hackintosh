@@ -20,7 +20,7 @@
 				<key>Enabled</key>
 				<true/>
 				<key>Path</key>
-				<string>SSDT-BatteryFix.aml</string>
+				<string>SSDT-BATT.aml</string>
 			</dict>
 			<dict>
 				<key>Comment</key>
@@ -337,14 +337,14 @@
 			</dict>
 			<dict>
 				<key>Comment</key>
-				<string>[BATT]ACEL._STA to XSTA</string>
+				<string>[BATT] _BST to XBST</string>
 				<key>Count</key>
 				<integer>0</integer>
 				<key>Enabled</key>
 				<true/>
 				<key>Find</key>
 				<data>
-				BV9TVEEAoEA=
+				X0JTVAA=
 				</data>
 				<key>Limit</key>
 				<integer>0</integer>
@@ -356,7 +356,41 @@
 				</data>
 				<key>Replace</key>
 				<data>
-				BVhTVEEAoEA=
+				WEJTVAA=
+				</data>
+				<key>ReplaceMask</key>
+				<data>
+				</data>
+				<key>Skip</key>
+				<integer>0</integer>
+				<key>TableLength</key>
+				<integer>0</integer>
+				<key>TableSignature</key>
+				<data>
+				</data>
+			</dict>
+			<dict>
+				<key>Comment</key>
+				<string>[BATT]ADJT to XDJT</string>
+				<key>Count</key>
+				<integer>0</integer>
+				<key>Enabled</key>
+				<true/>
+				<key>Find</key>
+				<data>
+				QURKVAg=
+				</data>
+				<key>Limit</key>
+				<integer>0</integer>
+				<key>Mask</key>
+				<data>
+				</data>
+				<key>OemTableId</key>
+				<data>
+				</data>
+				<key>Replace</key>
+				<data>
+				WERKVAg=
 				</data>
 				<key>ReplaceMask</key>
 				<data>
@@ -1527,7 +1561,7 @@
 				<string>dart=0 keepsyms=1 debug=0x100</string>
 				<key>csr-active-config</key>
 				<data>
-				5wMAAA==
+				AAAAAA==
 				</data>
 				<key>prev-lang:kbd</key>
 				<data>
@@ -1660,6 +1694,8 @@
 			<integer>70</integer>
 			<key>PlayChime</key>
 			<string>Auto</string>
+			<key>ResetTrafficClass</key>
+			<false/>
 			<key>SetupDelay</key>
 			<integer>500</integer>
 			<key>VolumeAmplifier</key>
@@ -1679,8 +1715,6 @@
 			<false/>
 			<key>KeyForgetThreshold</key>
 			<integer>5</integer>
-			<key>KeyMergeThreshold</key>
-			<integer>2</integer>
 			<key>KeySupport</key>
 			<true/>
 			<key>KeySupportMode</key>
@@ -1703,6 +1737,8 @@
 			<key>DirectGopRendering</key>
 			<false/>
 			<key>ForceResolution</key>
+			<false/>
+			<key>GopPassThrough</key>
 			<false/>
 			<key>IgnoreTextInGraphics</key>
 			<true/>
@@ -1762,6 +1798,8 @@
 		</dict>
 		<key>Quirks</key>
 		<dict>
+			<key>ActivateHpetSupport</key>
+			<false/>
 			<key>DisableSecurityPolicy</key>
 			<false/>
 			<key>ExitBootServicesDelay</key>

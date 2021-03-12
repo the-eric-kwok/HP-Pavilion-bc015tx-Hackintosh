@@ -20,7 +20,7 @@
 				<key>Enabled</key>
 				<true/>
 				<key>Path</key>
-				<string>SSDT-BatteryFix.aml</string>
+				<string>SSDT-BATT.aml</string>
 			</dict>
 			<dict>
 				<key>Comment</key>
@@ -133,7 +133,7 @@
 		<array>
 			<dict>
 				<key>Comment</key>
-				<string>[PTSWAK]_PTS to ZPTS(1,N)</string>
+				<string>[PTSWAK] _PTS to ZPTS(1,N)</string>
 				<key>Count</key>
 				<integer>0</integer>
 				<key>Enabled</key>
@@ -167,7 +167,7 @@
 			</dict>
 			<dict>
 				<key>Comment</key>
-				<string>[PTSWAK]_WAK to ZWAK(1,S)</string>
+				<string>[PTSWAK] _WAK to ZWAK(1,S)</string>
 				<key>Count</key>
 				<integer>0</integer>
 				<key>Enabled</key>
@@ -201,7 +201,7 @@
 			</dict>
 			<dict>
 				<key>Comment</key>
-				<string>[BATT]UPBS to XPBS(0,N)</string>
+				<string>[BATT] UPBS to XPBS(0,N)</string>
 				<key>Count</key>
 				<integer>0</integer>
 				<key>Enabled</key>
@@ -235,7 +235,7 @@
 			</dict>
 			<dict>
 				<key>Comment</key>
-				<string>[BATT]UPBI to XPBI(0,N)</string>
+				<string>[BATT] UPBI to XPBI(0,N)</string>
 				<key>Count</key>
 				<integer>0</integer>
 				<key>Enabled</key>
@@ -269,7 +269,7 @@
 			</dict>
 			<dict>
 				<key>Comment</key>
-				<string>[BATT]SMWR to XMWR(4,N)</string>
+				<string>[BATT] SMWR to XMWR(4,N)</string>
 				<key>Count</key>
 				<integer>0</integer>
 				<key>Enabled</key>
@@ -303,7 +303,7 @@
 			</dict>
 			<dict>
 				<key>Comment</key>
-				<string>[BATT]SMRD to XMRD</string>
+				<string>[BATT] SMRD to XMRD</string>
 				<key>Count</key>
 				<integer>0</integer>
 				<key>Enabled</key>
@@ -337,14 +337,14 @@
 			</dict>
 			<dict>
 				<key>Comment</key>
-				<string>[BATT]ACEL._STA to XSTA</string>
+				<string>[BATT] ADJT to XDJT</string>
 				<key>Count</key>
 				<integer>0</integer>
 				<key>Enabled</key>
 				<true/>
 				<key>Find</key>
 				<data>
-				BV9TVEEAoEA=
+				QURKVAg=
 				</data>
 				<key>Limit</key>
 				<integer>0</integer>
@@ -356,7 +356,7 @@
 				</data>
 				<key>Replace</key>
 				<data>
-				BVhTVEEAoEA=
+				WERKVAg=
 				</data>
 				<key>ReplaceMask</key>
 				<data>
@@ -371,7 +371,7 @@
 			</dict>
 			<dict>
 				<key>Comment</key>
-				<string>[BATT]CLRI to XLRI</string>
+				<string>[BATT] CLRI to XLRI</string>
 				<key>Count</key>
 				<integer>0</integer>
 				<key>Enabled</key>
@@ -405,7 +405,41 @@
 			</dict>
 			<dict>
 				<key>Comment</key>
-				<string>[GPRW]GPRW to XPRW(2,N)</string>
+				<string>[BATT] _BST to XBST</string>
+				<key>Count</key>
+				<integer>0</integer>
+				<key>Enabled</key>
+				<true/>
+				<key>Find</key>
+				<data>
+				X0JTVAA=
+				</data>
+				<key>Limit</key>
+				<integer>0</integer>
+				<key>Mask</key>
+				<data>
+				</data>
+				<key>OemTableId</key>
+				<data>
+				</data>
+				<key>Replace</key>
+				<data>
+				WEJTVAA=
+				</data>
+				<key>ReplaceMask</key>
+				<data>
+				</data>
+				<key>Skip</key>
+				<integer>0</integer>
+				<key>TableLength</key>
+				<integer>0</integer>
+				<key>TableSignature</key>
+				<data>
+				</data>
+			</dict>
+			<dict>
+				<key>Comment</key>
+				<string>[GPRW] GPRW to XPRW(2,N)</string>
 				<key>Count</key>
 				<integer>0</integer>
 				<key>Enabled</key>
@@ -439,7 +473,7 @@
 			</dict>
 			<dict>
 				<key>Comment</key>
-				<string>[BKey]_Q10 to XQ10</string>
+				<string>[BKey] _Q10 to XQ10</string>
 				<key>Count</key>
 				<integer>0</integer>
 				<key>Enabled</key>
@@ -473,7 +507,7 @@
 			</dict>
 			<dict>
 				<key>Comment</key>
-				<string>[BKey]_Q11 to XQ11</string>
+				<string>[BKey] _Q11 to XQ11</string>
 				<key>Count</key>
 				<integer>0</integer>
 				<key>Enabled</key>
@@ -507,7 +541,7 @@
 			</dict>
 			<dict>
 				<key>Comment</key>
-				<string>[PNLF]PNLF to XNLF</string>
+				<string>[PNLF] PNLF to XNLF</string>
 				<key>Count</key>
 				<integer>0</integer>
 				<key>Enabled</key>
@@ -1250,7 +1284,7 @@
 				<key>Arch</key>
 				<string>Any</string>
 				<key>Comment</key>
-				<string></string>
+				<string>Prevent AppleSMBus loads</string>
 				<key>Enabled</key>
 				<true/>
 				<key>Identifier</key>
@@ -1264,7 +1298,7 @@
 				<key>Arch</key>
 				<string>Any</string>
 				<key>Comment</key>
-				<string></string>
+				<string>Prevent AppleSMBus loads</string>
 				<key>Enabled</key>
 				<true/>
 				<key>Identifier</key>
@@ -1808,7 +1842,7 @@
 				<string>dart=0 bpr_probedelay=100 bpr_initialdelay=300 bpr_postresetdelay=300 keepsyms=1 debug=0x100</string>
 				<key>csr-active-config</key>
 				<data>
-				5wMAAA==
+				AAAAAA==
 				</data>
 				<key>prev-lang:kbd</key>
 				<data>
@@ -1941,6 +1975,8 @@
 			<integer>70</integer>
 			<key>PlayChime</key>
 			<string>Auto</string>
+			<key>ResetTrafficClass</key>
+			<false/>
 			<key>SetupDelay</key>
 			<integer>500</integer>
 			<key>VolumeAmplifier</key>
@@ -1960,8 +1996,6 @@
 			<false/>
 			<key>KeyForgetThreshold</key>
 			<integer>5</integer>
-			<key>KeyMergeThreshold</key>
-			<integer>2</integer>
 			<key>KeySupport</key>
 			<true/>
 			<key>KeySupportMode</key>
@@ -1984,6 +2018,8 @@
 			<key>DirectGopRendering</key>
 			<false/>
 			<key>ForceResolution</key>
+			<false/>
+			<key>GopPassThrough</key>
 			<false/>
 			<key>IgnoreTextInGraphics</key>
 			<true/>
@@ -2043,6 +2079,8 @@
 		</dict>
 		<key>Quirks</key>
 		<dict>
+			<key>ActivateHpetSupport</key>
+			<false/>
 			<key>DisableSecurityPolicy</key>
 			<false/>
 			<key>ExitBootServicesDelay</key>

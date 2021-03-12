@@ -425,66 +425,59 @@ DefinitionBlock ("", "SSDT", 2, "OCLT", "BATT", 0)
 
         Method (UPBI, 0, NotSerialized)
         {
-            If (_OSI ("Darwin"))
-            {
-                Local5 = B1B2 (^^PCI0.LPCB.EC0.FCC0, ^^PCI0.LPCB.EC0.FCC1)
-                If ((Local5 && !(Local5 & 0x8000)))
-                {
-                    Local5 >>= 0x05
-                    Local5 <<= 0x05
-                    PBIF [One] = Local5
-                    PBIF [0x02] = Local5
-                    Local2 = (Local5 / 0x64)
-                    Local2 += One
-                    If ((B1B2 (^^PCI0.LPCB.EC0.ADC0, ^^PCI0.LPCB.EC0.ADC1) < 0x0C80))
-                    {
-                        Local4 = (Local2 * 0x0E)
-                        PBIF [0x05] = (Local4 + 0x02)
-                        Local4 = (Local2 * 0x09)
-                        PBIF [0x06] = (Local4 + 0x02)
-                        Local4 = (Local2 * 0x0C)
-                    }
-                    Else
-                    {
-                        Local4 = (Local2 * 0x0C)
-                        PBIF [0x05] = (Local4 + 0x02)
-                        Local4 = (Local2 * 0x07)
-                        PBIF [0x06] = (Local4 + 0x02)
-                        Local4 = (Local2 * 0x0A)
-                    }
+			Local5 = B1B2 (^^PCI0.LPCB.EC0.FCC0, ^^PCI0.LPCB.EC0.FCC1)
+			If ((Local5 && !(Local5 & 0x8000)))
+			{
+				Local5 >>= 0x05
+				Local5 <<= 0x05
+				PBIF [0x02] = Local5
+				PBIF [One] = B1B2 (^^PCI0.LPCB.EC0.ADC0, ^^PCI0.LPCB.EC0.ADC1)
+				Local2 = (Local5 / 0x64)
+				Local2 += One
+				If ((B1B2 (^^PCI0.LPCB.EC0.ADC0, ^^PCI0.LPCB.EC0.ADC1) < 0x0C80))
+				{
+					Local4 = (Local2 * 0x0E)
+					PBIF [0x05] = (Local4 + 0x02)
+					Local4 = (Local2 * 0x09)
+					PBIF [0x06] = (Local4 + 0x02)
+					Local4 = (Local2 * 0x0C)
+				}
+				Else
+				{
+					Local4 = (Local2 * 0x0C)
+					PBIF [0x05] = (Local4 + 0x02)
+					Local4 = (Local2 * 0x07)
+					PBIF [0x06] = (Local4 + 0x02)
+					Local4 = (Local2 * 0x0A)
+				}
 
-                    FABL = (Local4 + 0x02)
-                }
+				FABL = (Local4 + 0x02)
+			}
 
-                If (^^PCI0.LPCB.EC0.MBNH)
-                {
-                    Local0 = ^^PCI0.LPCB.EC0.BVLB /* External reference */
-                    Local1 = ^^PCI0.LPCB.EC0.BVHB /* External reference */
-                    Local1 <<= 0x08
-                    Local0 |= Local1
-                    PBIF [0x04] = Local0
-                    PBIF [0x09] = "OANI$"
-                    PBIF [0x0B] = "NiMH"
-                }
-                Else
-                {
-                    Local0 = ^^PCI0.LPCB.EC0.BVLB /* External reference */
-                    Local1 = ^^PCI0.LPCB.EC0.BVHB /* External reference */
-                    Local1 <<= 0x08
-                    Local0 |= Local1
-                    PBIF [0x04] = Local0
-                    Sleep (0x32)
-                    PBIF [0x0B] = "LION"
-                }
+			If (^^PCI0.LPCB.EC0.MBNH)
+			{
+				Local0 = ^^PCI0.LPCB.EC0.BVLB /* External reference */
+				Local1 = ^^PCI0.LPCB.EC0.BVHB /* External reference */
+				Local1 <<= 0x08
+				Local0 |= Local1
+				PBIF [0x04] = Local0
+				PBIF [0x09] = "OANI$"
+				PBIF [0x0B] = "NiMH"
+			}
+			Else
+			{
+				Local0 = ^^PCI0.LPCB.EC0.BVLB /* External reference */
+				Local1 = ^^PCI0.LPCB.EC0.BVHB /* External reference */
+				Local1 <<= 0x08
+				Local0 |= Local1
+				PBIF [0x04] = Local0
+				Sleep (0x32)
+				PBIF [0x0B] = "LION"
+			}
 
-                PBIF [0x09] = "Primary"
-                UPUM ()
-                PBIF [Zero] = One
-            }
-            Else
-            {
-                \_SB.BAT0.XPBI ()
-            }
+			PBIF [0x09] = "Primary"
+			UPUM ()
+			PBIF [Zero] = One
         }
 
         Method (UPBS, 0, NotSerialized)
