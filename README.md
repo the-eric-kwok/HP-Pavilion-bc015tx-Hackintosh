@@ -306,6 +306,8 @@ Replace: 58425354 00
 
 ![donation](img/donate.png)
 
+[Or donate with PayPal](https://paypal.me/theerickwok)
+
 
 
 ## 目录
