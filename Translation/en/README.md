@@ -1,5 +1,19 @@
 # HP Pavilion bc015tx Hackintosh
 
+
+
+## Catalog
+
+[About 1820A](About_1820A.md)
+
+[About Intel AC7265](About_Intel_AC7265.md)
+
+[Patching USB with Hackintool](Patching_USB_with_Hackintool.md)
+
+[Fixing Suddenly Poweroff On BIOS Stage](Fixing_Suddenly_Poweroff_On_BIOS_Stage.md)
+
+
+
 | Part       | Info                                                         |
 | ---------- | ------------------------------------------------------------ |
 | Model      | HP Pavilion bc015tx                                          |
@@ -126,6 +140,18 @@ Press F10 at boot time to enter BIOS, disable Intel SGX and Secure Boot.
 
  
 
+## FIx Headphone Jack And Mute Indicator
+
+See [here](../../ALCPlugFix/README.md)
+
+### How Does It Work?
+
+Send `SET_PIN_WIDGET_CONTROL` command to `IOHDACodecDevice`, set Pin-ctls of node 0x19 to 0x24 to make Headphone Jack works.
+
+And the mute indicator will turn on if Pin-ctls of node 0x1b is setted to 0x1, or turn off if it's setted to 0x0. So I modified the code of ALCPlugFix to make it able to listen to mute event of OS, and set node 0x1b to 0x1 when OS is muted, or 0x0 otherwise.
+
+
+
 ## Themes
 
 There are 3 themes in my EFI, they are:
@@ -160,7 +186,7 @@ For other themes, see:
 ## Common issues
 
 ### If your battery percentage won't update / won't charge
-ACEL device is an accelerate sensor which provides falling protection for hard disk. But in its ADJT method there is a wrong SMWR calling, and causing Embedding Controller read/write failed under macOS. So that there will be problems such as battery percentage won't update, or battery won't charge, and these problems will occur under Windows once it happened in macOS.
+ACEL device is an accelerometer which provides falling protection for hard disk. But in its ADJT method there is a wrong SMWR calling, and causing Embedding Controller read/write failed under macOS. So that there will be problems such as battery percentage won't update, or battery won't charge, and these problems will occur under Windows once it happened in macOS.
 
 There are two ways to fix this:
 
@@ -296,6 +322,7 @@ There are two ways to fix this:
     }
     ```
     
+
 **After fixed, press down power button for longer then 10s to reset EC, and then boot up, you will see the fix works.**
 
 ### If your battery percentage is not accurate
@@ -329,12 +356,12 @@ There are two ways to fix this:
         {
             IVBS ()
         }
-
+    
         //If (LEqual (BRTE, Zero))  //Comment out these 3 lines
         //{
         //    Store (0xFFFFFFFF, Index (PBST, One))
         //}
-
+    
         Return (PBST)
     }
     ```
@@ -358,18 +385,29 @@ There are two ways to fix this:
 
 [OC-Little](https://github.com/daliansky/OC-little/)
 
+[Dortania Guide](https://dortania.github.io/OpenCore-Install-Guide/)
+
+[Full ACPI Specification](https://uefi.org/sites/default/files/resources/ACPI_6_3_May16.pdf)
+
 
 ## Donation
 With [PayPal](https://paypal.me/theerickwok)
 
 
-## Catalog
 
-[About 1820A](About_1820A.md)
+## Credit
 
-[About Intel AC7265](About_Intel_AC7265.md)
+**Acidanthera** for OpenCore, Lilu, VirtualSMC, WhateverGreen and most of the kext we used
 
-[Patching USB with Hackintool](Patching_USB_with_Hackintool.md)
+**OpenIntelWireless** for Itlwm (Intel WiFi driver) and IntelBluetoothInjector
 
-[Fixing Suddenly Poweroff On BIOS Stage](Fixing_Suddenly_Poweroff_On_BIOS_Stage.md)
+**RehabMan** for ACPIBatteryManager, FakeSMC, USBInjectAll, MaciASL
+
+**Dortania** for Dortania Guide
+
+**black-dragon74** for ALCPlugFix-Swift
+
+**daliansky**, **athlonreg**, **xjn819**, **GZXiaoBai**, **Bat.bat**, **Sukka** for OC-little guide and other guides
+
+**Sukka** for [oc.skk.moe](https://oc.skk.moe)
 

@@ -2,7 +2,7 @@
 
 (c) 2020 black.dragon74 aka Nick
 
-macOS daemon to send HD Audio commands (HDA Verbs) to an `IOHDADodecDevice` from user-sapce.
+macOS daemon to send HD Audio commands (HDA Verbs) to an `IOHDACodecDevice` from user-sapce.
 
 Check the homepage [here](https://github.com/black-dragon74/ALCPlugFix-Swift).
 

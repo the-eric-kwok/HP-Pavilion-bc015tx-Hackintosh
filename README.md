@@ -7,6 +7,20 @@ Language:
 
 
 
+## 目录
+
+[关于 1820A 网卡](Docs/About_1820A.md)
+
+[关于原装 Intel AC7265 网卡](Docs/About_Intel_AC7265.md)
+
+[使用 Hackintool 进行 USB 定制](Docs/使用Hackintool进行USB定制.md)
+
+[从 VoodooPS2 迁移到 VoodooRMI](Docs/从VoodooPS2迁移到VoodooRMI.md)
+
+[修复开机时的突然断电重启](Docs/修复开机时的突然断电重启.md)
+
+
+
 | 规格      | 详细信息                                                     |
 | --------- | ------------------------------------------------------------ |
 | 电脑型号  | HP Pavilion bc015tx                                          |
@@ -128,7 +142,27 @@ Language:
 
 ![IMG_1674](img/IMG_1674.jpeg)
 
-![IMG_1675](/img/IMG_1675.jpeg)
+![IMG_1675](img/IMG_1675.jpeg)
+
+
+
+## 修复耳机孔、静音键LED
+
+### bug 表现
+
+对于国行有麦耳机（OMTP标准），在 Windows 下使用时发声正常，而在 macOS 下则出现发声沉闷，需要按住耳机中间按钮才能正常使用的情况。
+
+根据 Windows 表现可推断该声卡具有切换耳机引脚定义的功能，使用 ALCPlugFix 成功修复了此 bug
+
+### 修复方法
+
+见[此处](ALCPlugFix/README.md)
+
+### 原理
+
+使用 alc-verb 向 `IOHDACodecDevice` 发送 `SET_PIN_WIDGET_CONTROL` 命令，将 0x19 节点的 Pin-ctls 设置为 0x24，即可让声音正常。
+
+此外还误打误撞发现 0x1b 节点的 Pin-ctls 若是设置为 0x1 则静音键LED亮起，设置为 0x0 则熄灭，故通过监听系统静音事件的方式，当系统进入静音状态时将 0x1b 节点设为 0x1，解除静音状态时设为 0x0。
 
 
 
@@ -308,16 +342,16 @@ ACEL 设备是一个惠普 HP 笔记本特有的设备，是加速度传感器�
 
 ### 如果你的电量百分比 macOS 与 Windows 下有偏差
     检查你的 DSDT 的 \_BST 方法，看看其中是否包含了这几行
-
+    
     ```
     If (LEqual (BRTE, Zero))
     {
         Store (0xFFFFFFFF, Index (PBST, One))
     }
     ```
-
+    
     如果是的话把以下 \_BST 方法放到 SSDT-BATT 中：
-
+    
     ```
     Scope (\_SB.BAT0)
     {
@@ -338,25 +372,25 @@ ACEL 设备是一个惠普 HP 笔记本特有的设备，是加速度传感器�
             {
                 IVBS ()
             }
-
+    
             //If (LEqual (BRTE, Zero))  //注释掉这几行
             //{
             //    Store (0xFFFFFFFF, Index (PBST, One))
             //}
-
+    
             Return (PBST)
         }
     }
     ```
-
+    
     然后重新编译 SSDT-BATT.aml，并且在 config 文件中 ACPI -> Patch 加上：
-
+    
     ```
     Comment: Rename _BST to XBST
     Find:    5F425354 00
     Replace: 58425354 00
     ```
-
+    
     重启即可
 
 
@@ -369,6 +403,10 @@ ACEL 设备是一个惠普 HP 笔记本特有的设备，是加速度传感器�
 
 [OC-Little](https://github.com/daliansky/OC-little/)
 
+[Dortania Guide](https://dortania.github.io/OpenCore-Install-Guide/)
+
+[ACPI 官方文档](https://uefi.org/sites/default/files/resources/ACPI_6_3_May16.pdf)
+
 
 
 ## 打赏
@@ -379,17 +417,19 @@ ACEL 设备是一个惠普 HP 笔记本特有的设备，是加速度传感器�
 
 
 
-## 目录
+## 感谢
 
-[关于 1820A 网卡](Docs/About_1820A.md)
+**Acidanthera** for OpenCore, Lilu, VirtualSMC, WhateverGreen and most of the kext we used
 
-[关于原装 Intel AC7265 网卡](Docs/About_Intel_AC7265.md)
+**OpenIntelWireless** for Itlwm (Intel WiFi driver) and IntelBluetoothInjector
 
-[使用 Hackintool 进行 USB 定制](Docs/使用Hackintool进行USB定制.md)
+**RehabMan** for ACPIBatteryManager, FakeSMC, USBInjectAll, MaciASL
 
-[从 VoodooPS2 迁移到 VoodooRMI](Docs/从VoodooPS2迁移到VoodooRMI.md)
+**Dortania** for Dortania Guide
 
-[修复开机时的突然断电重启](Docs/修复开机时的突然断电重启.md)
+**black-dragon74** for ALCPlugFix-Swift
 
-[修复耳机切换的bug](Docs/修复耳机切换的bug.md)
+**daliansky**, **athlonreg**, **xjn819**, **GZXiaoBai**, **Bat.bat**, **Sukka** for OC-little guide and other guides
+
+**Sukka** for [oc.skk.moe](https://oc.skk.moe)
 

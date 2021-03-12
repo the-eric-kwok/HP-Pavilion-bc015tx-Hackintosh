@@ -972,7 +972,7 @@
 				<key>BundlePath</key>
 				<string>VoodooSMBus.kext</string>
 				<key>Comment</key>
-				<string>Use either this or SSDT-SBUS</string>
+				<string>SMBus driver, Use either this or SSDT-SBUS</string>
 				<key>Enabled</key>
 				<true/>
 				<key>ExecutablePath</key>
@@ -990,7 +990,7 @@
 				<key>BundlePath</key>
 				<string>VoodooRMI.kext</string>
 				<key>Comment</key>
-				<string>Trackpad, depend on VoodooSMBus.kext</string>
+				<string>Synaptics touchpad driver</string>
 				<key>Enabled</key>
 				<true/>
 				<key>ExecutablePath</key>
@@ -1085,6 +1085,24 @@
 				<true/>
 				<key>ExecutablePath</key>
 				<string>Contents/MacOS/HoRNDIS</string>
+				<key>MaxKernel</key>
+				<string></string>
+				<key>MinKernel</key>
+				<string></string>
+				<key>PlistPath</key>
+				<string>Contents/Info.plist</string>
+			</dict>
+			<dict>
+				<key>Arch</key>
+				<string>Any</string>
+				<key>BundlePath</key>
+				<string>SidecarEnabler.kext</string>
+				<key>Comment</key>
+				<string>Enable Sidecar on any iPad</string>
+				<key>Enabled</key>
+				<true/>
+				<key>ExecutablePath</key>
+				<string>Contents/MacOS/SidecarEnabler</string>
 				<key>MaxKernel</key>
 				<string></string>
 				<key>MinKernel</key>
