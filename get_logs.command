@@ -46,7 +46,7 @@ echo '$ sudo dmesg' >> ${DMESG_LOG}
 sudo dmesg >> ${DMESG_LOG}
 
 
-zip ${ZIP_FILE} ${ACPI_LOG} ${VOODOO_LOG} ${DMESG_LOG}
+zip ${ZIP_FILE} ${ACPI_LOG} ${VOODOO_LOG} ${DMESG_LOG} 2>&1 > /dev/null
 
 rm ${ACPI_LOG} ${VOODOO_LOG} ${DMESG_LOG}
 
