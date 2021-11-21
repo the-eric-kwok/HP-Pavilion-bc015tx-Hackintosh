@@ -19,20 +19,23 @@ Language:
 
 [修复开机时的突然断电重启](Docs/修复开机时的突然断电重启.md)
 
+[修复 Windows 热重启无声](Docs/修复Windows热重启无声.md)
 
 
-| 规格      | 详细信息                                                     |
-| --------- | ------------------------------------------------------------ |
-| 电脑型号  | HP Pavilion bc015tx                                          |
-| 处理器    | Intel Core i7-6700HQ                                         |
-| 内存      | Hynix 8GB DDR4 2400 MHz                                      |
-| 固态硬盘  | SAMSUNG MZNTY128HDHP-000H1 128GB                             |
-| 机械硬盘  | HGST HTS721010A9E630 1TB                                     |
-| 集成显卡  | Intel HD Graphics 530                                        |
-| 独立显卡  | Nvidia GTX960M                                               |
-| 声卡      | Realtek ALC295 (Layout ID = 24)                              |
-| WIFI / BT | <ul><li>原装: Intel AC7265</li><li>更换后: DELL DW1820A (Pci14e4,43a3)</li></ul> |
-| 有线网卡  | RTL8111/8168/8411 PCI Express Gigabit Ethernet Controller    |
+## 配置信息
+
+| 规格      | 详细信息                                                                                                |
+| --------- | ------------------------------------------------------------------------------------------------------- |
+| 电脑型号  | HP Pavilion bc015tx                                                                                     |
+| 处理器    | Intel Core i7-6700HQ                                                                                    |
+| 内存      | Hynix 8GB DDR4 2400 MHz                                                                                 |
+| 固态硬盘  | SAMSUNG MZNTY128HDHP-000H1 128GB                                                                        |
+| 机械硬盘  | HGST HTS721010A9E630 1TB                                                                                |
+| 集成显卡  | Intel HD Graphics 530                                                                                   |
+| 独立显卡  | Nvidia GTX960M                                                                                          |
+| 声卡      | Realtek ALC295 (Layout ID = 24)                                                                         |
+| WIFI / BT | <ul><li>原装: Intel AC7265</li><li>兼容: DELL DW1820A (Pci14e4,43a3)</li><li>兼容: BCM94360Z3</li></ul> |
+| 有线网卡  | RTL8111/8168/8411 PCI Express Gigabit Ethernet Controller                                               |
 
 
 
@@ -120,14 +123,14 @@ Language:
 
 
 ## 支持的 OS 版本
-只在 macOS Catalina 和 macOS Big Sur 上测试过，更低版本的 macOS 未经测试，不保证可用性。
-（当前我停留在了 Catalina，暂时没有更换 Big Sur 的打算，所以可能有一些兼容问题无法解决，请见谅）
+只在 macOS Catalina、Big Sur、Monterey 上测试过，更低版本的 macOS 未经测试，不保证可用性。
 
 
 ## 关于 1820A
 
 如果你没有更换自己的网卡的话**不需要**以下kext：
 
+- BlueToolFixup.kext
 - BrcmBluetoothInjector.kext
 - BrcmFirmwareData.kext
 - BrcmPatchRAM3.kext

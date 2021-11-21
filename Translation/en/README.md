@@ -12,20 +12,24 @@
 
 [Fixing Suddenly Poweroff On BIOS Stage](Fixing_Suddenly_Poweroff_On_BIOS_Stage.md)
 
+[Fixing Sound Issue After Rebooted From Windows](Fixing_Sound_Issue_After_Rebooted_From_Windows.md)
 
 
-| Part       | Info                                                         |
-| ---------- | ------------------------------------------------------------ |
-| Model      | HP Pavilion bc015tx                                          |
-| CPU        | Intel Core i7-6700HQ                                         |
-| Mem        | Hynix 8GB DDR4 2400 MHz                                      |
-| SSD        | SAMSUNG MZNTY128HDHP-000H1 128GB                             |
-| HDD        | HGST HTS721010A9E630 1TB                                     |
-| IGPU       | Intel HD Graphics 530                                        |
-| DGPU       | Nvidia GTX960M                                               |
-| Sound Card | Realtek ALC295 (Layout ID = 28 or 77)                        |
-| WIFI / BT  | <ul><li>Original: Intel AC7265</li><li>Replacement: DELL DW1820A (Pci14e4,43a3)</li></ul> |
-| Ethernet   | RTL8111/8168/8411 PCI Express Gigabit Ethernet Controller    |
+
+## Specification
+
+| Part       | Info                                                                                                                    |
+| ---------- | ----------------------------------------------------------------------------------------------------------------------- |
+| Model      | HP Pavilion bc015tx                                                                                                     |
+| CPU        | Intel Core i7-6700HQ                                                                                                    |
+| Mem        | Hynix 8GB DDR4 2400 MHz                                                                                                 |
+| SSD        | SAMSUNG MZNTY128HDHP-000H1 128GB                                                                                        |
+| HDD        | HGST HTS721010A9E630 1TB                                                                                                |
+| IGPU       | Intel HD Graphics 530                                                                                                   |
+| DGPU       | Nvidia GTX960M                                                                                                          |
+| Sound Card | Realtek ALC295 (Layout ID = 28 or 77)                                                                                   |
+| WIFI / BT  | <ul><li>Original: Intel AC7265</li><li>Cpmpatible: DELL DW1820A (Pci14e4,43a3)</li><li>Cpmpatible: BCM94360Z3</li></ul> |
+| Ethernet   | RTL8111/8168/8411 PCI Express Gigabit Ethernet Controller                                                               |
 
 
 
@@ -114,13 +118,14 @@ Submit an [issue](https://github.com/the-eric-kwok/HP-Pavilion-bc015tx-Hackintos
 
 ## Supported OS version
 
-Only tested on Catalina and Big Sur.
+Only tested on Catalina, Big Sur and Monterey.
 
 
 ## About 1820A
 
 Without replacement of 1820A you **DONT NEED** these kexts:
 
+- BlueToolFixup.kext
 - BrcmBluetoothInjector.kext
 - BrcmFirmwareData.kext
 - BrcmPatchRAM3.kext
